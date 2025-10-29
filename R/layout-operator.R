@@ -75,7 +75,7 @@ local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     # Get the name of what was passed in as e2, and pass along so that it
     # can be displayed in error messages
     e2name <- deparse(substitute(e2, env = caller_env(2L)))
-    layout_add(e1, e2, e2name)
+    ggalign_update(e1, e2, e2name)
 })
 
 #' @include layout-.R
@@ -112,27 +112,6 @@ local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     layout_apply_all(e1, e2, e2name)
 })
 
-# `+` operator overload
-#' @importFrom S7 S7_dispatch
-layout_add <- S7::new_generic(
-    "layout_add", c("layout", "object"),
-    function(layout, object, objectname) S7_dispatch()
-)
-
-# `-` operator overload
-#' @importFrom S7 S7_dispatch
-layout_apply_selected <- S7::new_generic(
-    "layout_apply_selected", c("layout", "object"),
-    function(layout, object, objectname) S7_dispatch()
-)
-
-# `&` operator overload
-#' @importFrom S7 S7_dispatch
-layout_apply_all <- S7::new_generic(
-    "layout_apply_all", c("layout", "object"),
-    function(layout, object, objectname) S7_dispatch()
-)
-
 #' @include utils-ggplot.R
 local(
     for (left in list(QuadLayout, ChainLayout)) {
@@ -150,14 +129,14 @@ local(
             Domain
         )) {
             S7::method(layout_apply_selected, list(left, right)) <-
-                function(layout, object, objectname) {
+                function(x, object, objectname) {
                     cli_abort(c(
                         sprintf("Cannot add %s with {.code -}", objectname),
                         i = "Try to use {.code +} instead"
                     ))
                 }
             S7::method(layout_apply_all, list(left, right)) <-
-                function(layout, object, objectname) {
+                function(x, object, objectname) {
                     cli_abort(c(
                         sprintf("Cannot add %s with {.code &}", objectname),
                         i = "Try to use {.code +} instead"

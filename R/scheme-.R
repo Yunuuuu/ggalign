@@ -221,9 +221,7 @@ S7::method(ggalign_init, Schemes) <- function(x) {
 #' @importFrom S7 prop
 #' @keywords internal
 S7::method(ggalign_update, list(Schemes, Schemes)) <- function(x, object, ...) {
-    for (scheme in prop(object, "sets")) {
-        x <- ggalign_update(x, scheme, ...)
-    }
+    for (scheme in prop(object, "sets")) x <- ggalign_update(x, scheme, ...)
     x
 }
 
@@ -243,9 +241,7 @@ S7::method(ggalign_update, list(Schemes, Scheme)) <- function(x, object, ...) {
 #' @importFrom S7 prop
 #' @keywords internal
 S7::method(ggalign_inherit, list(Schemes, Schemes)) <- function(x, object, ...) {
-    for (scheme in prop(object, "sets")) {
-        x <- ggalign_inherit(x, scheme, ...)
-    }
+    for (scheme in prop(object, "sets")) x <- ggalign_inherit(x, scheme, ...)
     x
 }
 
@@ -265,8 +261,6 @@ S7::method(ggalign_inherit, list(Schemes, Scheme)) <- function(x, object, ...) {
 
 S7::method(ggalign_update, list(S7::class_any, Schemes)) <-
     function(x, object, ...) {
-        for (entry in prop(object, "sets")) {
-            x <- ggalign_update(x, entry, ...)
-        }
+        for (entry in prop(object, "sets")) x <- ggalign_update(x, entry, ...)
         x
     }

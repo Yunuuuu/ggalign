@@ -25,6 +25,18 @@ ggalign_init <- S7::new_generic("ggalign_init", "x", function(x) S7_dispatch())
 #' @export
 ggalign_update <- S7::new_generic("ggalign_update", c("x", "object"))
 
+# `-` operator overload
+#' @importFrom S7 S7_dispatch
+layout_apply_selected <- S7::new_generic(
+    "layout_apply_selected", c("x", "object")
+)
+
+# `&` operator overload
+#' @importFrom S7 S7_dispatch
+layout_apply_all <- S7::new_generic(
+    "layout_apply_all", c("x", "object")
+)
+
 #' Inherit Properties from Another Object
 #'
 #' This generic function allows one object to inherit properties or

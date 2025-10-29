@@ -1,114 +1,114 @@
 # Preventing from adding following elements
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, S7::class_data.frame)) <-
-    function(layout, object, objectname) {
-        cli_abort(sprintf("Can't change data of %s", object_name(layout)))
+S7::method(ggalign_update, list(QuadLayout, S7::class_data.frame)) <-
+    function(x, object, objectname) {
+        cli_abort(sprintf("Can't change data of %s", object_name(x)))
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, layout_title)) <-
-    function(layout, object, objectname) {
-        layout@titles <- layout@titles + object
-        layout
+S7::method(ggalign_update, list(QuadLayout, layout_title)) <-
+    function(x, object, objectname) {
+        x@titles <- x@titles + object
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, S7::class_list)) <-
-    function(layout, object, objectname) {
-        for (o in object) layout <- layout_add(layout, o, object_name)
-        layout
+S7::method(ggalign_update, list(QuadLayout, S7::class_list)) <-
+    function(x, object, objectname) {
+        for (o in object) x <- ggalign_update(x, o, object_name)
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, ggplot2::class_ggplot)) <-
-    function(layout, object, objectname) {
-        layout_add(layout, ggfree(data = object), objectname)
+S7::method(ggalign_update, list(QuadLayout, ggplot2::class_ggplot)) <-
+    function(x, object, objectname) {
+        ggalign_update(x, ggfree(data = object), objectname)
     }
 
 # Add elements for the main body or the annotation
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, S7::class_any)) <-
-    function(layout, object, objectname) {
-        if (is.null(object)) return(layout) # styler: off
+S7::method(ggalign_update, list(QuadLayout, S7::class_any)) <-
+    function(x, object, objectname) {
+        if (is.null(object)) return(x) # styler: off
         if (is.matrix(object)) {
-            cli_abort(sprintf("Can't change data of %s", object_name(layout)))
+            cli_abort(sprintf("Can't change data of %s", object_name(x)))
         }
-        if (is.null(position <- layout@current)) {
-            layout <- quad_body_add(object, layout, objectname)
-        } else if (is.null(stack <- prop(layout, position))) {
+        if (is.null(position <- x@current)) {
+            x <- quad_body_add(object, x, objectname)
+        } else if (is.null(stack <- prop(x, position))) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "the {.field {position}} annotation stack is not initialized",
                 i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
             ))
         } else {
-            prop(layout, position) <- layout_add(stack, object, objectname)
+            prop(x, position) <- ggalign_update(stack, object, objectname)
         }
-        layout
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
-S7::method(layout_add, list(QuadLayout, quad_scope)) <-
-    function(layout, object, objectname) {
-        old <- layout@current
+S7::method(ggalign_update, list(QuadLayout, quad_scope)) <-
+    function(x, object, objectname) {
+        old <- x@current
         contexts <- quad_scope_contexts(object, old)
         if (is.null(contexts)) contexts <- list(NULL)
         object <- prop(object, "object")
         for (active in contexts) {
-            layout@current <- active
-            layout <- layout_add(layout, object, objectname)
+            x@current <- active
+            x <- ggalign_update(x, object, objectname)
         }
-        layout@current <- old
-        layout
+        x@current <- old
+        x
     }
 
 ##################################################################
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(
-    layout_add,
+    ggalign_update,
     list(QuadLayout, S7::new_S3_class("quad_active"))
-) <- function(layout, object, objectname) {
+) <- function(x, object, objectname) {
     if (!is.null(width <- .subset2(object, "width"))) {
-        layout@width <- width
+        x@width <- width
     }
     if (!is.null(height <- .subset2(object, "height"))) {
-        layout@height <- height
+        x@height <- height
     }
-    layout@current <- NULL
-    layout
+    x@current <- NULL
+    x
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(
-    layout_add,
+    ggalign_update,
     list(QuadLayout, S7::new_S3_class("quad_anno"))
-) <- function(layout, object, objectname) {
+) <- function(x, object, objectname) {
     position <- .subset2(object, "position")
     initialize <- .subset2(object, "initialize")
-    stack <- prop(layout, position)
+    stack <- prop(x, position)
     if (is.null(stack) && !isFALSE(initialize)) {
         # try to initialize the annotation stack with the layout data
         direction <- to_direction(position)
-        layout_domain <- prop(layout, direction)
+        layout_domain <- prop(x, direction)
         # for the annotation stack, we try to take the data from the
         # quad layout
-        quad_data <- layout@data
+        quad_data <- x@data
         data <- waiver() # use waiver() to indicate data is not initialized
         quad_matrix <- FALSE # the default value for `quad_matrix` in the stack
         if (!is_discrete_domain(layout_domain)) { # the stack need a data frame
             if (!is.data.frame(quad_data)) {
                 if (is.null(initialize)) {
                     cli_warn(paste(
-                        "`data` in {.fn {layout@name}} is",
+                        "`data` in {.fn {x@name}} is",
                         "{.obj_type_friendly {quad_data}}, but the",
                         "{.field {position}} annotation stack need a",
                         "{.cls data.frame}, won't initialize",
@@ -130,7 +130,7 @@ S7::method(
         } else {
             if (is.null(initialize)) {
                 cli_warn(paste(
-                    "`data` in {.fn {layout@name}} is",
+                    "`data` in {.fn {x@name}} is",
                     "{.obj_type_friendly {quad_data}}, but the",
                     "{.field {position}} annotation stack need a",
                     "{.cls data.frame}, won't initialize",
@@ -170,40 +170,40 @@ S7::method(
         stack <- switch_chain_plot(
             stack, .subset2(object, "what"), quote(quad_anno())
         )
-        prop(layout, position) <- stack
+        prop(x, position) <- stack
     }
-    layout@current <- position
-    layout
+    x@current <- position
+    x
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(
-    layout_add,
+    ggalign_update,
     list(QuadLayout, QuadLayout)
-) <- function(layout, object, objectname) {
+) <- function(x, object, objectname) {
     cli_abort(c(
-        sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+        sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
         i = "Did you mean to place multiple {.fn quad_layout} elements inside a {.fn stack_layout}?"
     ))
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, StackLayout)) <-
-    function(layout, object, objectname) {
+S7::method(ggalign_update, list(QuadLayout, StackLayout)) <-
+    function(x, object, objectname) {
         # we check if there is an active annotation
-        if (is.null(position <- layout@current)) {
+        if (is.null(position <- x@current)) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "no active annotation stack",
                 i = "try to activate an annotation stack with {.fn anno_*}"
             ))
         }
         # check the annotation stack is not initialized
-        if (!is.null(prop(layout, position))) {
+        if (!is.null(prop(x, position))) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "{position} annotation stack already exists"
             ))
         }
@@ -211,24 +211,24 @@ S7::method(layout_add, list(QuadLayout, StackLayout)) <-
         if (!all(vapply(object@box_list, is_craftbox, logical(1L),
                     USE.NAMES = FALSE))) { # styler: off
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "annotation stack cannot contain nested layout"
             ))
         }
         # check quad layout is compatible with stack layout
         if (!identical(direction <- to_direction(position), object@direction)) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "only {.field {direction}} stack is allowed in {position} annotation"
             ))
         }
         if (length(object@sizes) > 1L) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "{.arg sizes} must be of length one to use the stack as an annotation"
             ))
         }
-        quad_domain <- prop(layout, direction)
+        quad_domain <- prop(x, direction)
         if (is_cross_layout(object) &&
             any(position == c("bottom", "right")) &&
             !is_empty(object@cross_points)) {
@@ -245,11 +245,11 @@ S7::method(layout_add, list(QuadLayout, StackLayout)) <-
                 cli_abort(c(
                     sprintf(
                         "Cannot add {.var {objectname}} to %s",
-                        object_name(layout)
+                        object_name(x)
                     ),
                     i = sprintf(
                         "%s cannot align continuous variable in {.field {direction}} direction",
-                        object_name(layout)
+                        object_name(x)
                     )
                 ))
             }
@@ -257,21 +257,21 @@ S7::method(layout_add, list(QuadLayout, StackLayout)) <-
         } else if (is_discrete_domain(quad_domain)) {
             layout_domain <- discrete_domain_update(
                 quad_domain, stack_domain,
-                old_name = object_name(layout),
+                old_name = object_name(x),
                 new_name = objectname
             )
         } else {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = sprintf(
                     "%s cannot align discrete variable in {.field {direction}} direction",
-                    object_name(layout)
+                    object_name(x)
                 )
             ))
         }
         object@heatmap$position <- position
-        prop(layout, position) <- object
-        layout_update_domain(layout,
+        prop(x, position) <- object
+        layout_update_domain(x,
             direction = direction,
             domain = layout_domain,
             objectname = objectname
@@ -280,26 +280,26 @@ S7::method(layout_add, list(QuadLayout, StackLayout)) <-
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_add, list(QuadLayout, CraftBox)) <-
-    function(layout, object, objectname) {
-        if (is.null(position <- layout@current)) {
+S7::method(ggalign_update, list(QuadLayout, CraftBox)) <-
+    function(x, object, objectname) {
+        if (is.null(position <- x@current)) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "no active annotation stack",
                 i = "try to activate an annotation stack with {.fn anno_*}"
             ))
         }
-        if (is.null(stack <- prop(layout, position))) {
+        if (is.null(stack <- prop(x, position))) {
             cli_abort(c(
-                sprintf("Cannot add {.var {objectname}} to %s", object_name(layout)),
+                sprintf("Cannot add {.var {objectname}} to %s", object_name(x)),
                 i = "the {.field {position}} annotation stack is not initialized",
                 i = "Try to use {.code quad_anno(initialize = TRUE)} or you can add a {.code stack_layout()} manually"
             ))
         }
 
         # add annotation -----------------------------
-        stack <- layout_add(stack, object, objectname)
-        prop(layout, position) <- stack
+        stack <- ggalign_update(stack, object, objectname)
+        prop(x, position) <- stack
 
         # if there are cross points in bottom or right annotation, we use
         # the first domain
@@ -311,7 +311,7 @@ S7::method(layout_add, list(QuadLayout, CraftBox)) <-
             new_domain <- stack@domain
         }
         layout_update_domain(
-            layout,
+            x,
             direction = to_direction(position),
             domain = new_domain,
             objectname = objectname
@@ -366,56 +366,58 @@ quad_body_add.Coord <- function(object, quad, objectname) {
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_selected, list(QuadLayout, S7::class_any)) <-
-    function(layout, object, objectname) {
-        if (is.null(context <- layout@current)) context <- c(.TLBR, list(NULL))
+    function(x, object, ...) {
+        if (is.null(context <- x@current)) context <- c(.TLBR, list(NULL))
         for (active in context) {
             if (is.null(active)) {
-                layout <- quad_body_add(object, layout, objectname)
-            } else if (!is.null(prop(layout, active))) {
-                prop(layout, active) <- layout_apply_selected(
-                    prop(layout, active), object, objectname
+                x <- quad_body_add(object, x, ...)
+            } else if (!is.null(prop(x, active))) {
+                prop(x, active) <- layout_apply_selected(
+                    prop(x, active), object, ...
                 )
             }
         }
-        layout
+        x
     }
 
 # for object can set at layout level
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_selected, list(QuadLayout, Scheme)) <-
-    function(layout, object, objectname) {
-        if (is.null(context <- layout@current)) {
-            layout <- ggalign_update(layout, object, objectname)
+    function(x, object, ...) {
+        if (is.null(context <- x@current)) {
+            prop(x, "schemes") <- ggalign_update(
+                prop(x, "schemes"), object, ...
+            )
         } else {
-            prop(layout, context) <- ggalign_update(
-                prop(layout, context), object, objectname
+            prop(x, context) <- layout_apply_selected(
+                prop(x, context), object, ...
             )
         }
-        layout
+        x
     }
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_selected, list(QuadLayout, quad_scope)) <-
-    function(layout, object, objectname) {
+    function(x, object, ...) {
         inner <- prop(object, "object")
-        contexts <- quad_scope_contexts(object, layout@current)
+        contexts <- quad_scope_contexts(object, x@current)
         # `subtract` operates at layout-level
         if (is.null(contexts)) {
-            layout <- layout_apply_selected(layout, inner, objectname)
+            x <- layout_apply_selected(x, inner, ...)
         } else {
             for (active in contexts) {
                 if (is.null(active)) {
-                    layout <- quad_body_add(inner, layout, objectname)
-                } else if (!is.null(prop(layout, active))) {
-                    prop(layout, active) <- layout_apply_selected(
-                        prop(layout, active), inner, objectname
+                    x <- quad_body_add(inner, x, ...)
+                } else if (!is.null(prop(x, active))) {
+                    prop(x, active) <- layout_apply_selected(
+                        prop(x, active), inner, ...
                     )
                 }
             }
         }
-        layout
+        x
     }
 
 ###############################################################
@@ -423,30 +425,29 @@ S7::method(layout_apply_selected, list(QuadLayout, quad_scope)) <-
 #' @include layout-operator.R
 #' @include layout-quad-scope.R
 S7::method(layout_apply_all, list(QuadLayout, quad_scope)) <-
-    function(layout, object, objectname) {
-        object <- prop(object, "object")
-        layout_apply_all(object, layout, objectname)
+    function(x, object, ...) {
+        layout_apply_all(x, prop(object, "object"), ...)
     }
 
-quad_and_add <- function(layout, object, objectname) {
-    layout <- quad_body_add(object, layout, objectname)
+quad_apply_all <- function(x, object, ...) {
+    x <- quad_body_add(object, x, ...)
     for (position in .TLBR) {
-        stack <- prop(layout, position)
+        stack <- prop(x, position)
         if (is.null(stack)) next # no annotation
-        prop(layout, position) <- layout_apply_all(stack, object, objectname)
+        prop(x, position) <- layout_apply_all(stack, object, ...)
     }
-    layout
+    x
 }
 
 #' @include layout-.R
 #' @include layout-operator.R
-S7::method(layout_apply_all, list(QuadLayout, S7::class_any)) <- quad_and_add
+S7::method(layout_apply_all, list(QuadLayout, S7::class_any)) <- quad_apply_all
 
 #' @include layout-.R
 #' @include layout-operator.R
 S7::method(layout_apply_all, list(QuadLayout, ggplot2::class_theme)) <-
-    function(layout, object, objectname) {
-        ans <- quad_and_add(layout, object, objectname)
+    function(x, object, ...) {
+        ans <- quad_apply_all(x, object, ...)
         # to align with `patchwork`, we also modify the layout theme
         # when using `&` to add the theme object.
         ans@theme <- ggfun("add_theme")(ans@theme, object)
