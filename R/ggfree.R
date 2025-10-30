@@ -85,7 +85,7 @@ new_free_gg <- function(plot, data, size, active,
 }
 
 #' @importFrom ggplot2 ggproto is_waiver
-FreeGg <- ggproto("FreeGg", CraftDesigner ,
+FreeGg <- ggproto("FreeGg", CraftDesigner,
     interact_layout = function(self, layout) {
         layout_data <- layout@data
         if (is_waiver(input_data <- self$input_data)) { # inherit from the layout
@@ -170,7 +170,7 @@ FreeGg <- ggproto("FreeGg", CraftDesigner ,
         gguse_data(plot, data)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(CraftDesigner , self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         c(header, "  Add plot without alignment")
     }
 )

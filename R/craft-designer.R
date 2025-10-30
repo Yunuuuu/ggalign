@@ -54,6 +54,18 @@ box_orientation <- S7::new_class(
                 }
             }
         ),
+        allow_break = S7::new_property(
+            S7::class_logical,
+            validator = function(value) {
+                if (length(value) != 1L) {
+                    return("must be a single boolean value")
+                }
+                if (is.na(value)) {
+                    return("cannot be missing (`NA`)")
+                }
+            },
+            default = FALSE
+        ),
         direction = S7::new_property(
             S7::class_character,
             validator = function(value) {

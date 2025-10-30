@@ -163,7 +163,7 @@ CrossGg <- ggproto("CrossGg",
         ggproto_parent(AlignGg, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(CraftDesigner , self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         c(header, "  Reset the ordering index and Add plot")
     }
 )

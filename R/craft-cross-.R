@@ -21,10 +21,10 @@ cross <- function(cross = NULL, data = waiver(),
     )
 }
 
-#' @importFrom ggplot2 ggproto ggproto_parent
-#' @include craftsman.R
+#' @importFrom ggplot2 ggproto ggproto_parent is_waiver
+#' @include craft-designer.R
 CraftCross <- ggproto(
-    "CraftCross", CraftDesigner ,
+    "CraftCross", CraftDesigner,
     data_params = NULL,
     inherit_nobs = NULL,
     inherit_panel = NULL,

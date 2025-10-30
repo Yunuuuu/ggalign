@@ -1,10 +1,9 @@
 new_craftbox <- function(craftsman = NULL, ...,
                          plot = NULL, active = NULL, size = NULL,
                          schemes = NULL, call = caller_call()) {
-    assert_active(active, allow_null = FALSE, call = call)
     # `call`: used to provide error message
     CraftBox(
-        craftsman = ggproto(NULL, craftsman %||% CraftDesigner , ..., call = call),
+        craftsman = ggproto(NULL, craftsman %||% CraftDesigner, ..., call = call),
         schemes = schemes %||% default_schemes(),
         plot = plot, active = active, size = size
     )

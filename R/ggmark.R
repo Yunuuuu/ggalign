@@ -84,7 +84,7 @@ ggmark <- function(mark, data = waiver(), mapping = aes(), ...,
 }
 
 #' @importFrom ggplot2 ggproto ggplot margin element_rect
-MarkGg <- ggproto("MarkGg", CraftDesigner ,
+MarkGg <- ggproto("MarkGg", CraftDesigner,
     interact_layout = function(self, layout) {
         layout_name <- self$layout_name
         if (!self$in_linear) { # only used for linear coordinate
@@ -180,7 +180,7 @@ MarkGg <- ggproto("MarkGg", CraftDesigner ,
         ggproto_parent(CrossMark, self)$finish_plot(plot, schemes, theme)
     },
     summary = function(self, plot) {
-        header <- ggproto_parent(CraftDesigner , self)$summary(plot)
+        header <- ggproto_parent(CraftDesigner, self)$summary(plot)
         c(header, "  Add plot to annotate observations")
     }
 )
