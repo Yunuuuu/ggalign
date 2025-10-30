@@ -64,7 +64,7 @@ selectively remove or relax these alignment constraints:</p>
 <span></span>
 <span><span class="fu">free_space</span><span class="op">(</span><span class="va">plot</span>, spaces <span class="op">=</span> <span class="st">"tlbr"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">free_vp</span><span class="op">(</span><span class="va">plot</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="cn">NA</span>, height <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">free_vp</span><span class="op">(</span><span class="va">plot</span>, x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="cn">NA</span>, height <span class="op">=</span> <span class="cn">NA</span>, <span class="va">...</span>, resize <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -190,6 +190,16 @@ or more of <code>"t"</code>, <code>"l"</code>, <code>"b"</code>, and <code>"r"</
 
 
 </dl></dd>
+
+
+<dt id="arg-resize">resize<a class="anchor" aria-label="anchor" href="#arg-resize"></a></dt>
+<dd><p>A logical value. If <code>TRUE</code>, the viewport will be resized to
+accommodate the underlying gtable. This only applies when both the viewport
+width/height and the underlying gtable widths/heights are specified using
+absolute units. If <code>TRUE</code> and the viewport width/height is <code>NA</code>, the
+width/height will be set to match the gtable's widths/heights. Otherwise,
+the width/height will be set to <code>unit(1, "npc")</code>. See
+<code><a href="https://rdrr.io/r/grid/absolute.size.html" class="external-link">absolute.size()</a></code> for absolute unit.</p></dd>
 
 </dl></div>
     <div class="section level2">
