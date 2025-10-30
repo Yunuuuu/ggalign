@@ -119,13 +119,13 @@ stack_composer_add <- function(box, stack, composer, ...) {
                 composer$b <- .subset2(composer, "b") + 1L
                 composer$align <- .subset2(composer, "align") + 1L
             }
-            if (!is_null_unit(size <- .subset2(sizes, "top"))) {
+            if (is_absolute_unit(size <- .subset2(sizes, "top"))) {
                 attr(top, "ggalign_free_vp")$height <- size
             }
             composer <- stack_composer_add_plot(composer, top, t = 1L, l = l)
         }
         if (!is.null(bottom <- .subset2(plots, "bottom"))) {
-            if (!is_null_unit(size <- .subset2(sizes, "bottom"))) {
+            if (is_absolute_unit(size <- .subset2(sizes, "bottom"))) {
                 attr(bottom, "ggalign_free_vp")$height <- size
             }
             composer <- stack_composer_add_plot(composer, bottom,
@@ -159,13 +159,13 @@ stack_composer_add <- function(box, stack, composer, ...) {
                 composer$r <- .subset2(composer, "r") + 1L
                 composer$align <- .subset2(composer, "align") + 1L
             }
-            if (!is_null_unit(size <- .subset2(sizes, "left"))) {
+            if (is_absolute_unit(size <- .subset2(sizes, "left"))) {
                 attr(left, "ggalign_free_vp")$width <- size
             }
             composer <- stack_composer_add_plot(composer, left, t = t, l = 1L)
         }
         if (!is.null(right <- .subset2(plots, "right"))) {
-            if (!is_null_unit(size <- .subset2(sizes, "right"))) {
+            if (is_absolute_unit(size <- .subset2(sizes, "right"))) {
                 attr(right, "ggalign_free_vp")$width <- size
             }
             composer <- stack_composer_add_plot(composer, right,

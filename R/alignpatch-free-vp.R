@@ -42,31 +42,23 @@ patch.ggalign_free_vp <- function(x) {
             if (is.grob(gt)) {
                 vp <- self$vp
 
-                if (!any(is_null_unit(widths <- .subset2(gt, "widths")))) {
-                    horizontal_just <- TRUE
+                if (all(is_absolute_unit(widths <- .subset2(gt, "widths")))) {
                     vp$width <- sum(widths)
                 } else if (!is.na(as.numeric(vp$width))) {
                     # we guess the width from the gtable
-                    horizontal_just <- TRUE
                     vp$width <- max(vp$width, sum(widths))
                 } else {
                     vp$width <- unit(1, "npc")
-                    horizontal_just <- FALSE
                 }
-                if (!any(is_null_unit(heights <- .subset2(gt, "heights")))) {
-                    vertical_just <- TRUE
+                if (all(is_absolute_unit(heights <- .subset2(gt, "heights")))) {
                     vp$height <- sum(heights)
                 } else if (!is.na(as.numeric(vp$height))) {
                     # we guess the height from the gtable
-                    vertical_just <- TRUE
                     vp$height <- max(vp$height, sum(heights))
                 } else {
                     vp$height <- unit(1, "npc")
-                    vertical_just <- FALSE
                 }
-                if (horizontal_just || vertical_just) {
-                    gt <- editGrob(gt, vp = vp)
-                }
+                gt <- editGrob(gt, vp = vp)
             }
             ggproto_parent(Parent, self)$place(
                 gtable, gt, t, l, b, r, i, bg_z, plot_z
