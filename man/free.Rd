@@ -21,7 +21,7 @@ free_lab(plot, labs = "tlbr")
 
 free_space(plot, spaces = "tlbr")
 
-free_vp(plot, x = 0.5, y = 0.5, width = NA, height = NA, ...)
+free_vp(plot, x = 0.5, y = 0.5, width = NA, height = NA, ..., resize = TRUE)
 }
 \arguments{
 \item{plot}{Any object that can be aligned with \code{\link[=alignpatches]{alignpatches()}}. In
@@ -102,6 +102,14 @@ or more of \code{"t"}, \code{"l"}, \code{"b"}, and \code{"r"}.}
     \item{\code{name}}{A character value to uniquely identify the viewport
     once it has been pushed onto the viewport tree.  }
   }}
+
+\item{resize}{A logical value. If \code{TRUE}, the viewport will be resized to
+accommodate the underlying gtable. This only applies when both the viewport
+width/height and the underlying gtable widths/heights are specified using
+absolute units. If \code{TRUE} and the viewport width/height is \code{NA}, the
+width/height will be set to match the gtable's widths/heights. Otherwise,
+the width/height will be set to \code{unit(1, "npc")}. See
+\code{\link[grid:absolute.size]{absolute.size()}} for absolute unit.}
 }
 \value{
 \itemize{
