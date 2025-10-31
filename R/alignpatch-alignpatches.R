@@ -639,6 +639,8 @@ PatchAlignpatches <- ggproto(
 
         # setup sizes for non-panel rows/columns --------------
         sizes <- table_sizes(
+            widths = .subset2(gt, "widths"),
+            heights = .subset2(gt, "heights"),
             sizes_list, panel_widths, panel_heights,
             area, dims[2L], dims[1L]
         )
@@ -806,11 +808,13 @@ PatchAlignpatches <- ggproto(
 )
 
 #' @importFrom grid convertHeight convertWidth unit
-table_sizes <- function(sizes_list, panel_widths, panel_heights,
+table_sizes <- function(widths, heights, sizes_list,
+                        panel_widths, panel_heights,
                         area, ncol, nrow) {
     # `null` unit of the panel area will be converted into 0
     # we'll set the panel width and height afterward
-    widths <- lapply(sizes_list, function(sizes) {
+    widths <- convertWidth(widths, "mm", valueOnly = TRUE)
+    subplots_widths <- lapply(sizes_list, function(sizes) {
         if (is.null(sizes)) {
             left <- right <- NULL
         } else {
@@ -829,7 +833,7 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
         }
         c(l, 0, r)
     })
-    widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
+    subplots_widths <- vapply(seq_len(ncol * TABLE_COLS), function(i) {
         area_col <- locate_recycle_which_block(i, TABLE_COLS)
         col_loc <- locate_recycle_which_position(i, TABLE_COLS)
         if (col_loc == LEFT_BORDER + 1L) {
@@ -839,7 +843,7 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
         idx <- field(area, area_side) == area_col
         if (any(idx)) {
             max(
-                vapply(.subset(widths, idx), function(width) {
+                vapply(.subset(subplots_widths, idx), function(width) {
                     .subset(width, col_loc)
                 }, numeric(1L), USE.NAMES = FALSE),
                 0L
@@ -848,7 +852,10 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
             0L
         }
     }, numeric(1L), USE.NAMES = FALSE)
-    heights <- lapply(sizes_list, function(sizes) {
+    widths <- pmax(widths, subplots_widths)
+
+    heights <- convertHeight(heights, "mm", valueOnly = TRUE)
+    subplots_heights <- lapply(sizes_list, function(sizes) {
         if (is.null(sizes)) {
             top <- bottom <- NULL
         } else {
@@ -867,7 +874,7 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
         }
         c(t, 0, b)
     })
-    heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
+    subplots_heights <- vapply(seq_len(nrow * TABLE_ROWS), function(i) {
         area_row <- locate_recycle_which_block(i, TABLE_ROWS)
         row_loc <- locate_recycle_which_position(i, TABLE_ROWS)
         if (row_loc == TOP_BORDER + 1L) {
@@ -878,7 +885,7 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
         if (any(idx)) {
             max(
                 vapply(
-                    .subset(heights, idx), .subset, numeric(1L),
+                    .subset(subplots_heights, idx), .subset, numeric(1L),
                     row_loc,
                     USE.NAMES = FALSE
                 ),
@@ -888,6 +895,7 @@ table_sizes <- function(sizes_list, panel_widths, panel_heights,
             0L
         }
     }, numeric(1L), USE.NAMES = FALSE)
+    heights <- pmax(heights, subplots_heights)
 
     # restore the panel sizes ----------------------------
     widths <- unit(widths, "mm")
