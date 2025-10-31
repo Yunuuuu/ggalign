@@ -51,7 +51,7 @@ Patch object.  It includes:"><meta property="og:image" content="https://yunuuuu.
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">patch_options</span><span class="op">(</span>theme <span class="op">=</span> <span class="cn">NULL</span>, guides <span class="op">=</span> <span class="cn">NULL</span>, tag <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">patch_options</span><span class="op">(</span>theme <span class="op">=</span> <span class="cn">NULL</span>, guides <span class="op">=</span> <span class="cn">NULL</span>, tag <span class="op">=</span> <span class="cn">NULL</span>, metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,6 +64,9 @@ vector.</p></li>
 <li><p><code>tag</code>: Either <code>NULL</code> (no tag), a single string, or a <code>LayoutTagger</code> object
 that provides a <code>$tag()</code> method to generate a tag string for tagging each
 plot individually.</p></li>
+<li><p><code>metadata</code>: A list of additional metadata. This can store any extra
+information relevant to the patch, such as custom parameters or auxiliary
+data that do not fit into the other categories.</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
