@@ -430,7 +430,7 @@ Patch <- ggproto(
     #'
     #' @importFrom gtable is.gtable
     border_sizes = function(self, gt = NULL, free = NULL) {
-        if (is.gtable(gt)) {
+        if (!is.gtable(gt)) {
             return(NULL)
         }
 
