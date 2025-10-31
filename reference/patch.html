@@ -105,16 +105,8 @@ should be collected by the parent <code><a href="alignpatches.html">alignpatches
 <dd><p><strong>Description</strong></p>
 <p>(Required method) Constructs a
 <code><a href="standardized_gtable.html">standardized gtable</a></code> object.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>theme</code>: The global <code><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></code> of the parent
-<code><a href="alignpatches.html">alignpatches()</a></code> object.</p></li>
-<li><p><code>guides</code>: Specifies which sides of guide legends should be collected by
-the parent <code><a href="alignpatches.html">alignpatches()</a></code> object. In most cases, this is the value
-returned by the subplot's <code>self$guides()</code> method. For plots along the
-border, any guide legends on that side will always be collected if any
-legends on that side of any subplot are being collected.</p></li>
-<li><p><code>tagger</code>: Either <code>NULL</code> (no tagging) or a <code>LayoutTagger</code> object that
-provides a <code>$tag_table</code> method (accepting the <code>gtable</code> and <code>theme</code>)
-used to add tag.</p></li>
+<p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object that contains various layout
+options.</p></li>
 </ul><p><strong>Value</strong>
 A standardized <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, or a simple
 <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a></code> object.</p>

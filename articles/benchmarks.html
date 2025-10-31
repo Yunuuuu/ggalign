@@ -79,7 +79,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/jokergoo/ComplexHeatmap" class="external-link">ComplexHeatmap</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: grid</span></span>
 <span><span class="co">#&gt; ========================================</span></span>
-<span><span class="co">#&gt; ComplexHeatmap version 2.24.1</span></span>
+<span><span class="co">#&gt; ComplexHeatmap version 2.26.0</span></span>
 <span><span class="co">#&gt; Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/</span></span>
 <span><span class="co">#&gt; Github page: https://github.com/jokergoo/ComplexHeatmap</span></span>
 <span><span class="co">#&gt; Documentation: http://jokergoo.github.io/ComplexHeatmap-reference</span></span>
@@ -166,11 +166,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                 148.94ms 151.97ms     6.55         NA    8.18 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()           2.3s     2.3s     0.434        NA    0.868</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()    4.62s    4.62s     0.216        NA    1.95 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()      553.59ms 553.59ms     1.81         NA    0    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                       2s       2s     0.499        NA    7.48</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                 149.94ms 152.91ms     6.50         NA    8.13 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()           2.3s     2.3s     0.435        NA    0.869</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()    4.64s    4.64s     0.216        NA    1.94 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()      557.15ms 557.15ms     1.79         NA    0    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    2.07s    2.07s     0.483        NA    7.25</span></span></code></pre></div>
 <p>For heatmap with dendrogram</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu"><a href="https://bench.r-lib.org/reference/mark.html" class="external-link">mark</a></span><span class="op">(</span></span>
@@ -216,11 +216,11 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 6</span></span></span>
 <span><span class="co">#&gt;   expression                     min   median `itr/sec` mem_alloc `gc/sec`</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;bch:expr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:tm&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;bch:byt&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                    2.92s    2.92s     0.342        NA    1.03 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()           2.8s     2.8s     0.358        NA    1.07 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> heatmap()                    2.91s    2.91s     0.343        NA    1.03 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> gplots::heatmap.2()          2.77s    2.77s     0.360        NA    1.08 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> ComplexHeatmap::Heatmap()    5.52s    5.52s     0.181        NA    2.72 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()         2.22s    2.22s     0.450        NA    0.899</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    5.24s    5.24s     0.191        NA    4.58</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> pheatmap::pheatmap()         2.21s    2.21s     0.453        NA    0.905</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> ggalign()                    5.25s    5.25s     0.190        NA    4.57</span></span></code></pre></div>
 </div>
   </main>
 </div>
