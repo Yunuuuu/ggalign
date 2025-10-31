@@ -41,6 +41,10 @@ patch.ggalign_free_guide <- function(x) {
     }
     ggproto("PatchFreeGuide", Parent,
         free_guides = guides,
-        guides = function(self, guides) self$free_guides
+        setup_options = function(self, options) {
+            options <- ggproto_parent(Parent, self)$setup_options(options)
+            prop(options, "guides", check = FALSE) <- self$free_guides
+            options
+        }
     )
 }

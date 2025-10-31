@@ -314,21 +314,18 @@ S7::method(ggalign_gtable, CircleLayout) <- function(x) {
 #' @importFrom ggplot2 ggproto
 S7::method(patch, CircleLayout) <- function(x) {
     build <- ggalign_build(x)
-    ggproto(NULL, PatchGgplot,
-        gtable = function(self, options) {
+    ggproto(NULL, Patch,
+        setup_options = function(self, options = NULL) {
             # Preserve tag-related theme settings from the original layout
             # theme. These are intentionally not overridden so that
             # `PatchAlignpatches` retains full control over tag appearance and
             # positioning.
             if (!is.null(theme <- prop(options, "theme"))) {
-                theme <- prop(build, "theme") +
+                prop(options, "theme", check = FALSE) <- prop(build, "theme") +
                     (tag_theme(theme) + tag_theme(prop(x, "theme")))
             }
-            gt <- ggalign_gtable(build)
-            if (!is.null(tagger <- prop(options, "tagger"))) {
-                gt <- tagger$tag_table(gt, theme)
-            }
-            gt
-        }
+            ggproto_parent(Patch, self)$setup_options(options)
+        },
+        gtable = function(self, options) ggalign_gtable(build)
     )
 }

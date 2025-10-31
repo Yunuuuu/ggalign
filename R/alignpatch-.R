@@ -167,27 +167,24 @@ Patch <- ggproto(
     # The input subplot, stored in the `plot` field by convention.
     plot = NULL,
 
-    #' @field guides
+    #' @field setup_options
     #' **Description**
     #'
-    #' (Optional method) Determines which sides of the guide legends should be
-    #' collected by the parent [`alignpatches()`] object.
-    #'
-    #' This per-plot method allows each subplot to modify the `guides` passed to
-    #' the `self$decompose_guides()` method, ensuring that plots along the
-    #' border collect their guide legends correctly. Such fine-grained control
-    #' cannot be achieved when relying on only a single
-    #' `self$decompose_guides()` method.
+    #' (Optional method) Sets up the options for the layout configuration.
     #'
     #' **Arguments**
-    #' - `guides`: The `guides` argument passed from the parent
-    #'   [`alignpatches()`] object, specifying how legends should be combined or
-    #'   positioned. Possible values include `r oxford_and(.TLBR)`.
+    #' - `options`: A [`patch_options`] object that contains various layout
+    #'   options.
     #'
     #' **Value**
-    #' A modified `guides` object indicating which sides of the guide legends
-    #' should be collected by the parent [`alignpatches()`] object.
-    guides = function(self, guides) guides,
+    #' A modified `options` object.
+    setup_options = function(self, options = NULL) {
+        options <- options %||% patch_options()
+        if (is_tagger(tagger <- prop(options, "tag"))) {
+            prop(options, "tag", check = FALSE) <- tagger$tag()
+        }
+        options
+    },
 
     #' @field gtable
     #'
@@ -197,8 +194,11 @@ Patch <- ggproto(
     #' [`standardized gtable`][standardized_gtable] object.
     #'
     #' **Arguments**
-    #' - `options`: A [`patch_options`] object that contains various layout
-    #'   options.
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method. For border plots, any guide options will
+    #'   include the borders if legends on that side of any subplots are being
+    #'   collected.
     #'
     #' **Value**
     #' A standardized [`gtable`][gtable::gtable] object, or a simple
@@ -227,10 +227,11 @@ Patch <- ggproto(
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
     #'   `self$gtable()`.
     #' - `guides`: Specifies which sides of guide legends should be collected by
-    #'   the parent [`alignpatches()`] object. In most cases, this is the value
-    #'   returned by the subplot's `self$guides()` method. For plots along the
-    #'   border, any guide legends on that side will always be collected if any
-    #'   legends on that side of any subplot are being collected.
+    #'   the parent [`alignpatches()`] object. In most cases, this is the guides
+    #'   value returned by the subplot's `self$setup_options()` method. For
+    #'   plots along the border, any guide legends on that side will always be
+    #'   collected if any legends on that side of any subplot are being
+    #'   collected.
     #'
     #' **Value**
     #' A list with:
@@ -295,6 +296,42 @@ Patch <- ggproto(
         }
         if (length(removed)) gt <- subset_gt(gt, -removed, trim = FALSE)
         list(gt = gt, guides = collected_guides)
+    },
+
+    #' @field tag
+    #'
+    #' Add a Tag to a `gtable`
+    #'
+    #' **Description**:
+    #' This function adds a tag to a given `gtable` at a specified position. The
+    #' tag is added only if the `gtable` is standardized (i.e., it has the
+    #' expected number of rows and columns)..
+    #'
+    #' **Arguments**:
+    #' - `gt`: A `gtable` object to which the tag will be added.
+    #' - `label`: A string representing the label or content for the tag.
+    #' - `theme`: The plot theme containing the style elements for the tag.
+    #' - `t`, `l`, `b`, `r`: Numeric values representing the top, left, bottom,
+    #'   and right margins (coordinates) for placing the tag on the `gtable`.
+    #' - `z`: A numeric value representing the z-order, controlling the stacking
+    #'   order of the tag relative to other elements in the `gtable`.
+    #'
+    #' **Value**:
+    #' The modified `gtable` with the tag added. If the `gtable` is not
+    #' standardized (i.e., it doesn't meet the row/column requirements), the
+    #' function returns the original `gtable` without modification.
+    tag = function(self, gt, label, theme, t, l, b, r, z) {
+        if (!is.gtable(gt)) {
+            return(gt)
+        }
+        heights <- .subset2(gt, "heights")
+        widths <- .subset2(gt, "widths")
+        # Note: When the gtable represents a facetted plot, the number of
+        #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
+        if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
+            return(gt)
+        }
+        table_add_tag(gt, label, theme, t, l, b, r, z)
     },
 
     #' @field align_panel
@@ -393,43 +430,42 @@ Patch <- ggproto(
     #'
     #' @importFrom gtable is.gtable
     border_sizes = function(self, gt = NULL, free = NULL) {
-        if (is.gtable(gt)) {
-            heights <- .subset2(gt, "heights")
-            widths <- .subset2(gt, "widths")
-            # Only compute border sizes for standardized gtables.
-            # Note: When the gtable represents a facetted plot, the number of
-            #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
-            if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
-                return(NULL)
-            }
-            if (any(free == "top")) {
-                top <- NULL
-            } else {
-                top <- heights[seq_len(TOP_BORDER)]
-            }
-            if (any(free == "bottom")) {
-                bottom <- NULL
-            } else {
-                bottom <- heights[
-                    (length(heights) - BOTTOM_BORDER + 1L):length(heights)
-                ]
-            }
-            if (any(free == "left")) {
-                left <- NULL
-            } else {
-                left <- widths[seq_len(LEFT_BORDER)]
-            }
-            if (any(free == "right")) {
-                right <- NULL
-            } else {
-                right <- widths[
-                    (length(widths) - RIGHT_BORDER + 1L):length(widths)
-                ]
-            }
-            list(top = top, left = left, bottom = bottom, right = right)
-        } else {
-            NULL
+        if (!is.gtable(gt)) {
+            return(NULL)
         }
+
+        heights <- .subset2(gt, "heights")
+        widths <- .subset2(gt, "widths")
+        # Only compute border sizes for standardized gtables.
+        # Note: When the gtable represents a facetted plot, the number of
+        #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
+        if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
+            return(NULL)
+        }
+
+        if (any(free == "top")) {
+            top <- NULL
+        } else {
+            top <- heights[seq_len(TOP_BORDER)]
+        }
+        if (any(free == "bottom")) {
+            bottom <- NULL
+        } else {
+            bottom <- heights[
+                (length(heights) - BOTTOM_BORDER + 1L):length(heights)
+            ]
+        }
+        if (any(free == "left")) {
+            left <- NULL
+        } else {
+            left <- widths[seq_len(LEFT_BORDER)]
+        }
+        if (any(free == "right")) {
+            right <- NULL
+        } else {
+            right <- widths[(length(widths) - RIGHT_BORDER + 1L):length(widths)]
+        }
+        list(top = top, left = left, bottom = bottom, right = right)
     },
 
     #' @field align_border
@@ -565,9 +601,9 @@ Patch <- ggproto(
     #' representation.
     #'
     #' If `TRUE`, the fields `self$patches`, `self$gt_list`, and
-    #' `self$borders_list` are expected to exist in the `$align_border()` and
-    #' `$place()` methods. See the `patch.ggalign_free_lab` function in the
-    #' `alignpatch-free-lab.R` script for an example of usage.
+    #' `self$borders_list` are expected to exist. See the
+    #' `patch.ggalign_free_lab` function in the `alignpatch-free-lab.R` script
+    #' for an example of usage.
     #'
     #' **Value**
     #' Logical value (`TRUE` or `FALSE`) indicating whether `self` is a

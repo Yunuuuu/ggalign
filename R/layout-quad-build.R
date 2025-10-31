@@ -38,19 +38,18 @@ S7::method(ggalign_build, QuadLayout) <- function(x) {
 #' @importFrom S7 prop<- prop
 #' @importFrom ggplot2 ggproto_parent ggproto
 S7::method(patch, QuadLayout) <- function(x) {
-    plot <- ggalign_build(x)
-    Parent <- patch(plot)
+    Parent <- patch(ggalign_build(x))
     ggproto(NULL, Parent,
-        gtable = function(self, options) {
+        setup_options = function(self, options) {
             # Preserve tag-related theme settings from the original layout
             # theme. These are intentionally not overridden so that
-            # `Parent` retains full control over tag appearance and
+            # `PatchAlignpatches` retains full control over tag appearance and
             # positioning.
             if (!is.null(theme <- prop(options, "theme"))) {
                 prop(self$plot, "theme") <- prop(self$plot, "theme") +
                     (tag_theme(theme) + tag_theme(prop(x, "theme")))
             }
-            ggproto_parent(Parent, self)$gtable(options)
+            ggproto_parent(Parent, self)$setup_options(options)
         }
     )
 }

@@ -30,27 +30,18 @@ the core methods for arranging and aligning subplots.
 \section{Fields}{
 
 \describe{
-\item{\code{guides}}{\strong{Description}
+\item{\code{setup_options}}{\strong{Description}
 
-(Optional method) Determines which sides of the guide legends should be
-collected by the parent \code{\link[=alignpatches]{alignpatches()}} object.
-
-This per-plot method allows each subplot to modify the \code{guides} passed to
-the \code{self$decompose_guides()} method, ensuring that plots along the
-border collect their guide legends correctly. Such fine-grained control
-cannot be achieved when relying on only a single
-\code{self$decompose_guides()} method.
+(Optional method) Sets up the options for the layout configuration.
 
 \strong{Arguments}
 \itemize{
-\item \code{guides}: The \code{guides} argument passed from the parent
-\code{\link[=alignpatches]{alignpatches()}} object, specifying how legends should be combined or
-positioned. Possible values include \code{"top"}, \code{"left"}, \code{"bottom"}, and \code{"right"}.
+\item \code{options}: A \code{\link{patch_options}} object that contains various layout
+options.
 }
 
 \strong{Value}
-A modified \code{guides} object indicating which sides of the guide legends
-should be collected by the parent \code{\link[=alignpatches]{alignpatches()}} object.}
+A modified \code{options} object.}
 
 \item{\code{gtable}}{\strong{Description}
 
@@ -59,8 +50,11 @@ should be collected by the parent \code{\link[=alignpatches]{alignpatches()}} ob
 
 \strong{Arguments}
 \itemize{
-\item \code{options}: A \code{\link{patch_options}} object that contains various layout
-options.
+\item \code{options}: A \code{\link{patch_options}} object containing various layout
+options. Typically, this is the value returned by the subplot's
+\code{self$setup_options()} method. For border plots, any guide options will
+include the borders if legends on that side of any subplots are being
+collected.
 }
 
 \strong{Value}
@@ -87,10 +81,11 @@ in the \code{gt} is removed to free up space, except for guides placed
 \item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
 \code{self$gtable()}.
 \item \code{guides}: Specifies which sides of guide legends should be collected by
-the parent \code{\link[=alignpatches]{alignpatches()}} object. In most cases, this is the value
-returned by the subplot's \code{self$guides()} method. For plots along the
-border, any guide legends on that side will always be collected if any
-legends on that side of any subplot are being collected.
+the parent \code{\link[=alignpatches]{alignpatches()}} object. In most cases, this is the guides
+value returned by the subplot's \code{self$setup_options()} method. For
+plots along the border, any guide legends on that side will always be
+collected if any legends on that side of any subplot are being
+collected.
 }
 
 \strong{Value}
@@ -100,6 +95,29 @@ A list with:
 \item \code{guides}: A named list of collected guide grobs corresponding to the
 sides specified in \code{guides} (or \code{NULL} if absent).
 }}
+
+\item{\code{tag}}{Add a Tag to a \code{gtable}
+
+\strong{Description}:
+This function adds a tag to a given \code{gtable} at a specified position. The
+tag is added only if the \code{gtable} is standardized (i.e., it has the
+expected number of rows and columns)..
+
+\strong{Arguments}:
+\itemize{
+\item \code{gt}: A \code{gtable} object to which the tag will be added.
+\item \code{label}: A string representing the label or content for the tag.
+\item \code{theme}: The plot theme containing the style elements for the tag.
+\item \code{t}, \code{l}, \code{b}, \code{r}: Numeric values representing the top, left, bottom,
+and right margins (coordinates) for placing the tag on the \code{gtable}.
+\item \code{z}: A numeric value representing the z-order, controlling the stacking
+order of the tag relative to other elements in the \code{gtable}.
+}
+
+\strong{Value}:
+The modified \code{gtable} with the tag added. If the \code{gtable} is not
+standardized (i.e., it doesn't meet the row/column requirements), the
+function returns the original \code{gtable} without modification.}
 
 \item{\code{align_panel}}{\strong{Description}
 
@@ -226,9 +244,9 @@ Checks whether the object inherits from the \code{\link[=alignpatches]{alignpatc
 representation.
 
 If \code{TRUE}, the fields \code{self$patches}, \code{self$gt_list}, and
-\code{self$borders_list} are expected to exist in the \verb{$align_border()} and
-\verb{$place()} methods. See the \code{patch.ggalign_free_lab} function in the
-\code{alignpatch-free-lab.R} script for an example of usage.
+\code{self$borders_list} are expected to exist. See the
+\code{patch.ggalign_free_lab} function in the \code{alignpatch-free-lab.R} script
+for an example of usage.
 
 \strong{Value}
 Logical value (\code{TRUE} or \code{FALSE}) indicating whether \code{self} is a
