@@ -57,7 +57,8 @@ grid.draw.patch_ggplot <- function(x, recording = TRUE) {
 
 ##################################################
 S7::method(ggalign_gtable, ggplot2::class_ggplot) <- function(x) {
-    patch(x)$gtable(patch_options())
+    p <- patch(x)
+    p$gtable(p$setup_options(patch_options()))
 }
 
 S7::method(ggalign_build, ggplot2::class_ggplot) <- function(x) x
@@ -80,30 +81,28 @@ S7::method(patch, ggplot2::class_ggplot) <- function(x) {
 #' @importFrom ggplot2 ggplotGrob update_labels complete_theme
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
-    gtable = function(self, options) {
-        plot <- self$plot
+    setup_options = function(self, options = NULL) {
         if (is.null(prop(options, "theme"))) {
-            theme <- plot$theme
+            theme <- self$plot$theme
         } else {
-            theme <- tag_theme(prop(options, "theme")) + plot$theme
+            theme <- tag_theme(prop(options, "theme")) + self$plot$theme
         }
-
         # complete_theme() will ensure elements exist --------
         theme <- complete_theme(theme)
         # here: we remove tick length when the tick is blank
         theme <- setup_tick_length_element(theme)
+        prop(options, "theme", check = FALSE) <- theme
+        ggproto_parent(Patch, self)$setup_options(options)
+    },
+    gtable = function(self, options) {
+        plot <- self$plot
+        theme <- prop(options, "theme")
         plot$theme <- theme
-
-        # build the grob -------------------------------------
         ans <- ggplotGrob(plot)
         self$strip_pos <- find_strip_pos(ans, theme)
         # always add strips columns and/or rows
         ans <- add_strips(ans, self$strip_pos)
-        ans <- setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
-        if (!is.null(prop(options, "tagger"))) {
-            ans <- prop(options, "tagger")$tag_table(ans, theme)
-        }
-        ans
+        setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
     },
     border_sizes = function(self, gt = NULL, free = NULL) {
         out <- ggproto_parent(Patch, self)$border_sizes(gt, free)

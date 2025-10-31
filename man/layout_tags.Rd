@@ -51,9 +51,15 @@ sequences. Formatting can be customized with separators, prefixes, and
 suffixes.
 }
 \details{
-The appearance of tags is controlled by the \code{plot.tag}, \code{plot.tag.position},
-and \code{plot.tag.location} theme elements. Tag styling is first retrieved from
-the plot's theme; if not found there, the layout's theme is used.
+The appearance of tags is controlled by the \code{plot.tag}, \code{plot.tag.placement},
+\code{plot.tag.position}, and \code{plot.tag.location} theme elements. Tag styling is
+first retrieved from the plot's theme; if not found there, the layout's theme
+is used.
+
+\code{plot.tag.placement} (new in \code{ggalign}) determines where the tag is
+positioned—either within the plot itself (\code{"plot"}) or on the canvas where
+all plots are placed (\code{"canvas"}). When placed on the \code{canvas}, the tag will
+not move with the plots if you use \code{free_vp()} or other helper functions.
 }
 \examples{
 p1 <- ggplot(mtcars) +

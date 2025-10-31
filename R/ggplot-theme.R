@@ -66,6 +66,7 @@ theme_panel_border <- function() theme(panel.border = element_rect(fill = NA))
 theme_elements <- function() {
     register_theme_elements(
         element_tree = list(
+            plot.tag.placement = el_def("character"),
             plot.patch_title = el_def(element_text, "text"),
             plot.patch_title.top = el_def(element_text, "text"),
             plot.patch_title.left = el_def(element_text, "text"),

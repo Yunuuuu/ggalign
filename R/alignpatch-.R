@@ -167,27 +167,24 @@ Patch <- ggproto(
     # The input subplot, stored in the `plot` field by convention.
     plot = NULL,
 
-    #' @field guides
+    #' @field setup_options
     #' **Description**
     #'
-    #' (Optional method) Determines which sides of the guide legends should be
-    #' collected by the parent [`alignpatches()`] object.
-    #'
-    #' This per-plot method allows each subplot to modify the `guides` passed to
-    #' the `self$decompose_guides()` method, ensuring that plots along the
-    #' border collect their guide legends correctly. Such fine-grained control
-    #' cannot be achieved when relying on only a single
-    #' `self$decompose_guides()` method.
+    #' (Optional method) Sets up the options for the layout configuration.
     #'
     #' **Arguments**
-    #' - `guides`: The `guides` argument passed from the parent
-    #'   [`alignpatches()`] object, specifying how legends should be combined or
-    #'   positioned. Possible values include `r oxford_and(.TLBR)`.
+    #' - `options`: A [`patch_options`] object that contains various layout
+    #'   options.
     #'
     #' **Value**
-    #' A modified `guides` object indicating which sides of the guide legends
-    #' should be collected by the parent [`alignpatches()`] object.
-    guides = function(self, guides) guides,
+    #' A modified `options` object.
+    setup_options = function(self, options = NULL) {
+        options <- options %||% patch_options()
+        if (is_tagger(tagger <- prop(options, "tag"))) {
+            prop(options, "tag", check = FALSE) <- tagger$tag()
+        }
+        options
+    },
 
     #' @field gtable
     #'
@@ -197,8 +194,11 @@ Patch <- ggproto(
     #' [`standardized gtable`][standardized_gtable] object.
     #'
     #' **Arguments**
-    #' - `options`: A [`patch_options`] object that contains various layout
-    #'   options.
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method. For border plots, any guide options will
+    #'   include the borders if legends on that side of any subplots are being
+    #'   collected.
     #'
     #' **Value**
     #' A standardized [`gtable`][gtable::gtable] object, or a simple
@@ -227,10 +227,11 @@ Patch <- ggproto(
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
     #'   `self$gtable()`.
     #' - `guides`: Specifies which sides of guide legends should be collected by
-    #'   the parent [`alignpatches()`] object. In most cases, this is the value
-    #'   returned by the subplot's `self$guides()` method. For plots along the
-    #'   border, any guide legends on that side will always be collected if any
-    #'   legends on that side of any subplot are being collected.
+    #'   the parent [`alignpatches()`] object. In most cases, this is the guides
+    #'   value returned by the subplot's `self$setup_options()` method. For
+    #'   plots along the border, any guide legends on that side will always be
+    #'   collected if any legends on that side of any subplot are being
+    #'   collected.
     #'
     #' **Value**
     #' A list with:
@@ -295,6 +296,34 @@ Patch <- ggproto(
         }
         if (length(removed)) gt <- subset_gt(gt, -removed, trim = FALSE)
         list(gt = gt, guides = collected_guides)
+    },
+
+    #' @field tag
+    #'
+    #' **Description**
+    #' (Optional method) Inserts the patch's gtable (including optional
+    #' background) into the target canvas gtable.
+    #'
+    #' This method places the patch's gtable into a specified location of
+    #' another gtable, preserving the background and plot layers separately if a
+    #' background exists. The `t`, `l`, `b`, `r` arguments specify the position
+    #' in the target gtable, and `bg_z` / `plot_z` define the stacking order
+    #' (z-order) for background and plot.
+    #'
+    #' **Arguments**
+    #' - `gtable`: the target canvas gtable into which the patch will be
+    #'   inserted.
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$align_border()`.
+    #' - `t`, `l`, `b`, `r`: Integer positions (top, left, bottom, right)
+    #'   specifying where to insert the patch in the target gtable.
+    #' - `i`: Index of the current patch, used to generate unique grob names.
+    #' - `z`: Z-order for the tag grob (default `1L`).
+    #'
+    #' **Value**
+    #' The modified gtable with the patch's gtable added.
+    tag = function(self, gt, label, theme, t, l, b, r, z) {
+        table_add_tag(gt, label, theme, t, l, b, r, z)
     },
 
     #' @field align_panel
@@ -565,9 +594,9 @@ Patch <- ggproto(
     #' representation.
     #'
     #' If `TRUE`, the fields `self$patches`, `self$gt_list`, and
-    #' `self$borders_list` are expected to exist in the `$align_border()` and
-    #' `$place()` methods. See the `patch.ggalign_free_lab` function in the
-    #' `alignpatch-free-lab.R` script for an example of usage.
+    #' `self$borders_list` are expected to exist. See the
+    #' `patch.ggalign_free_lab` function in the `alignpatch-free-lab.R` script
+    #' for an example of usage.
     #'
     #' **Value**
     #' Logical value (`TRUE` or `FALSE`) indicating whether `self` is a

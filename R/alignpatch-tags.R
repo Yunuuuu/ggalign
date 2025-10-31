@@ -6,9 +6,15 @@
 #' sequences. Formatting can be customized with separators, prefixes, and
 #' suffixes.
 #'
-#' The appearance of tags is controlled by the `plot.tag`, `plot.tag.position`,
-#' and `plot.tag.location` theme elements. Tag styling is first retrieved from
-#' the plot's theme; if not found there, the layout's theme is used.
+#' The appearance of tags is controlled by the `plot.tag`, `plot.tag.placement`,
+#' `plot.tag.position`, and `plot.tag.location` theme elements. Tag styling is
+#' first retrieved from the plot's theme; if not found there, the layout's theme
+#' is used.
+#'
+#' `plot.tag.placement` (new in `ggalign`) determines where the tag is
+#' positioned—either within the plot itself (`"plot"`) or on the canvas where
+#' all plots are placed (`"canvas"`). When placed on the `canvas`, the tag will
+#' not move with the plots if you use `free_vp()` or other helper functions.
 #'
 #' @param tags Tag templates for plots in the layout.
 #'   If `waiver()` (default), tags are inherited from the parent layout.
@@ -140,33 +146,33 @@ local(
 
 #' @importFrom ggplot2 ggproto is_waiver
 #' @importFrom S7 prop
-create_layout_tagger <- function(tags, parent) {
+create_layout_tagger <- function(tags, tagger) {
     # initialize the tags
     tags <- ggalign_init(tags)
 
     # If no parent and no tags, return NULL
-    if (is.null(parent) &&
+    if (!is_tagger(tagger) &&
         (is.null(prop(tags, "tags")) || is_waiver(prop(tags, "tags")))) {
         return(NULL)
     }
 
     # If has parent and tags are waived, inherit parent directly
-    if (!is.null(parent) && is_waiver(prop(tags, "tags"))) {
-        return(parent)
+    if (is_tagger(tagger) && is_waiver(prop(tags, "tags"))) {
+        return(tagger)
     }
 
     # If has parent and tags are `NULL`, take parent's resolved tag as whole
-    if (!is.null(parent) && is.null(prop(tags, "tags"))) {
-        return(parent$tag())
+    if (is_tagger(tagger) && is.null(prop(tags, "tags"))) {
+        return(tagger$tag())
     }
 
     # Compose combined prefix, suffix, and separator
     prefix <- prop(tags, "prefix")
     suffix <- prop(tags, "suffix")
-    if (!is.null(parent)) {
-        prefix <- paste0(parent$prefix, prefix)
-        suffix <- paste0(suffix, parent$suffix)
-        prefix <- paste0(prefix, parent$resolve_tag(), prop(tags, "sep"))
+    if (is_tagger(tagger)) {
+        prefix <- paste0(tagger$prefix, prefix)
+        suffix <- paste0(suffix, tagger$suffix)
+        prefix <- paste0(prefix, tagger$resolve_tag(), prop(tags, "sep"))
     }
     tags <- prop(tags, "tags")
     if (length(tags) == 1L) {
@@ -197,24 +203,23 @@ create_layout_tagger <- function(tags, parent) {
             out <- .subset(self$tags, self$index)
             self$index <- self$index + 1L
             out
-        },
-        tag_table = function(self, table, theme) {
-            label <- self$tag()
-            table_add_tag(table, label, theme)
         }
     )
 }
 
+is_tagger <- function(x) inherits(x, "ggalign::LayoutTagger")
+
 #' @importFrom S7 S7_data
+#' @importFrom ggplot2 theme
 tag_theme <- function(th) {
     if (is.null(th)) {
         theme()
     } else {
         th <- S7_data(th)
-        th <- .subset(th, intersect(
-            c("plot.tag", "plot.tag.position", "plot.tag.location"),
-            names(th)
-        ))
+        th <- .subset(th, intersect(c(
+            "plot.tag", "plot.tag.placement",
+            "plot.tag.position", "plot.tag.location"
+        ), names(th)))
         theme(!!!th)
     }
 }
@@ -222,7 +227,7 @@ tag_theme <- function(th) {
 #' @importFrom ggplot2 is_theme_element calc_element theme element_grob
 #' @importFrom gtable gtable_add_grob
 #' @importFrom rlang arg_match0
-table_add_tag <- function(table, label, theme) {
+table_add_tag <- function(table, label, theme, t, l, b, r, z) {
     # Early exit when label is absent or element is blank
     if (length(label) < 1L) {
         return(table)
@@ -313,29 +318,33 @@ table_add_tag <- function(table, label, theme) {
             table <- gtable_add_grob(
                 table, tag,
                 name = "tag", clip = "off",
-                t = 2L, b = nrow(table) - 1L,
-                l = 2L, r = ncol(table) - 1L,
-                z = TAGS_Z
+                t = t + 1L, b = b - 1L,
+                l = l + 1L, r = r - 1L,
+                z = z
             )
             return(table)
         }
     }
 
     if (location == "panel") {
-        place <- find_panel(table)
+        place <- data_frame0(
+            t = t + TOP_BORDER, b = b - BOTTOM_BORDER,
+            l = l + LEFT_BORDER, r = r - RIGHT_BORDER
+        )
     } else {
-        n_col <- ncol(table)
-        n_row <- nrow(table)
+        place <- data_frame0(
+            t = t + 1L, b = b - 1L,
+            l = l + 1L, r = r - 1L
+        )
         # Actually fill margin with relevant units
-        if (top) table$heights[2L] <- max(height, table$heights[2L])
-        if (left) table$widths[2L] <- max(width, table$widths[2L])
+        if (top) table$heights[place$t] <- max(height, table$heights[place$t])
+        if (left) table$widths[place$l] <- max(width, table$widths[place$l])
         if (right) {
-            table$widths[n_col - 1L] <- max(table$widths[n_col - 1L], width)
+            table$widths[place$b] <- max(table$widths[place$b], width)
         }
         if (bottom) {
-            table$heights[n_row - 1L] <- max(table$heights[n_row - 1L], height)
+            table$heights[place$r] <- max(table$heights[place$r], height)
         }
-        place <- data_frame0(t = 2L, r = n_col - 1L, b = n_row - 1L, l = 2L)
     }
 
     # Shrink placement to position
@@ -348,6 +357,6 @@ table_add_tag <- function(table, label, theme) {
         table, tag,
         name = "tag", clip = "off",
         t = place$t, l = place$l, b = place$b, r = place$r,
-        z = TAGS_Z
+        z = z
     )
 }

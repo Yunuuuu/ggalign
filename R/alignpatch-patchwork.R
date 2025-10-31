@@ -67,6 +67,11 @@ patch.wrapped_patch <- patch.patch
 PatchPatchworkPatch <- ggproto(
     "PatchPatchworkPatch", Patch,
     # `patch` from `patchwork`: patchwork::plot_spacer
+    setup_options = function(self, options) {
+        prop(options, "theme", check = FALSE) <- prop(options, "theme") %||%
+            theme_get()
+        ggproto_parent(Patch, self)$setup_options(options)
+    },
     #' @importFrom gtable gtable_add_rows gtable_add_cols
     #' @importFrom ggplot2 find_panel
     gtable = function(self, options) {
@@ -88,11 +93,6 @@ PatchPatchworkPatch <- ggproto(
                 v <- .subset2(panel_pos, "r") + 3L # right of the ylab
                 ans <- gtable_add_cols(ans, unit(0, "mm"), pos = v)
             }
-        }
-        if (!is.null(tagger <- prop(options, "tagger"))) {
-            ans <- tagger$tag_table(
-                ans, prop(options, "theme") %||% theme_get()
-            )
         }
         ans
     }
