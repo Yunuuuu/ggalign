@@ -4,7 +4,7 @@
 \alias{patch_options}
 \title{Options passed to the Patch \code{gtable} method}
 \usage{
-patch_options(theme = NULL, guides = NULL, tag = NULL)
+patch_options(theme = NULL, guides = NULL, tag = NULL, metadata = list())
 }
 \description{
 This class defines the options that can be passed to the \code{gtable} method of a
@@ -19,6 +19,9 @@ vector.
 \item \code{tag}: Either \code{NULL} (no tag), a single string, or a \code{LayoutTagger} object
 that provides a \verb{$tag()} method to generate a tag string for tagging each
 plot individually.
+\item \code{metadata}: A list of additional metadata. This can store any extra
+information relevant to the patch, such as custom parameters or auxiliary
+data that do not fit into the other categories.
 }
 }
 \keyword{internal}

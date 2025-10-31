@@ -170,6 +170,9 @@ TAGS_Z <- 5L
 #' - `tag`: Either `NULL` (no tag), a single string, or a `LayoutTagger` object
 #'   that provides a `$tag()` method to generate a tag string for tagging each
 #'   plot individually.
+#' - `metadata`: A list of additional metadata. This can store any extra
+#'   information relevant to the patch, such as custom parameters or auxiliary
+#'   data that do not fit into the other categories.
 #'
 #' @keywords internal
 patch_options <- S7::new_class("patch_options",
@@ -186,7 +189,8 @@ patch_options <- S7::new_class("patch_options",
                     return("must be a single string or `LayoutTagger` object")
                 }
             }
-        )
+        ),
+        metadata = S7::class_list
     )
 )
 
@@ -239,8 +243,11 @@ PatchAlignpatches <- ggproto(
 
         # if no plots, we do nothing --------------------------
         options <- options %||% patch_options()
-        self$patches <- patches # should be a list
-        if (is_empty(patches)) return(options) # styler: off
+        metadata <- list(patches = patches)
+        if (is_empty(patches)) {
+            prop(options, "metadata", check = FALSE) <- metadata
+            return(options)
+        }
 
         # add borders to patch --------------------------------
         area <- vec_slice(area, keep)
@@ -268,10 +275,10 @@ PatchAlignpatches <- ggproto(
         if (is.null(theme <- prop(options, "theme"))) {
             # by default, we use ggplot2 default theme
             theme <- prop(self$plot, "theme")
-            self$top_level <- TRUE
+            metadata$top_level <- TRUE
         } else {
             theme <- theme + prop(self$plot, "theme")
-            self$top_level <- FALSE
+            metadata$top_level <- FALSE
         }
         prop(options, "theme", check = FALSE) <- complete_theme(theme)
 
@@ -292,19 +299,22 @@ PatchAlignpatches <- ggproto(
             prop(self$plot, "tags"),
             prop(options, "tag")
         )
-        out <- options
 
         #######################################################
         # define the options for the sub-plots ----------------
         # the `alignpatches` tag is a string, it means regarding the
         # alignpatches as a single plot, instead of tag each sub-plots, so we
         # remove the tag
-        if (is_string(prop(options, "tag"))) prop(options, "tag") <- NULL
+        subplots_options <- options
+        if (is_string(prop(subplots_options, "tag"))) {
+            prop(subplots_options, "tag") <- NULL
+        }
 
         # Let each patch to determine the options
         options_list <- lapply(patches, function(patch) {
-            patch$setup_options(options)
+            patch$setup_options(subplots_options)
         })
+
         # Always ensure that plots placed in a border collect their guides, if
         # any guides are to be collected in that border.
         # This prevents overlap, unless the guides will be collected by the
@@ -326,14 +336,19 @@ PatchAlignpatches <- ggproto(
         })
 
         #######################################################
-        self$collected <- collected
-        self$borders_list <- borders_list
-        self$options_list <- options_list
-        self$area <- area
-        self$dims <- dims
-        self$panel_widths <- panel_widths
-        self$panel_heights <- panel_heights
-        out
+        prop(options, "metadata", check = FALSE) <- c(
+            metadata,
+            list(
+                collected = collected,
+                borders_list = borders_list,
+                options_list = options_list,
+                area = area,
+                dims = dims,
+                panel_widths = panel_widths,
+                panel_heights = panel_heights
+            )
+        )
+        options
     },
 
     #' @importFrom gtable gtable gtable_add_grob
@@ -342,25 +357,26 @@ PatchAlignpatches <- ggproto(
     #' @importFrom S7 prop prop<-
     #' @importFrom rlang arg_match0 is_empty
     gtable = function(self, options) {
-        if (is.null(self$patches)) {
+        metadata <- prop(options, "metadata")
+        if (is.null(.subset2(metadata, "patches"))) {
             cli_abort("Run `$setup_options()` to initialize the patches first.")
         }
 
-        if (is_empty(self$patches)) {
+        if (is_empty(.subset2(metadata, "patches"))) {
             return(make_patch_table())
         }
 
         # prepare the output ---------------------------------
         gt <- gtable(
-            unit(rep(0L, TABLE_COLS * self$dims[2L]), "null"),
-            unit(rep(0L, TABLE_ROWS * self$dims[1L]), "null")
+            unit(rep(0L, TABLE_COLS * metadata$dims[2L]), "null"),
+            unit(rep(0L, TABLE_ROWS * metadata$dims[1L]), "null")
         )
 
         # setup gtable list ----------------------------------
-        gt_list <- guides_list <- vector("list", length(self$patches))
-        for (i in seq_along(self$patches)) {
-            patch_options <- .subset2(self$options_list, i)
-            patch <- .subset2(self$patches, i)
+        gt_list <- guides_list <- vector("list", length(metadata$patches))
+        for (i in seq_along(metadata$patches)) {
+            patch_options <- .subset2(metadata$options_list, i)
+            patch <- .subset2(metadata$patches, i)
             components <- patch$decompose_guides(
                 patch$gtable(patch_options),
                 prop(patch_options, "guides")
@@ -387,7 +403,7 @@ PatchAlignpatches <- ggproto(
                         1, 1, nrow(patch_gt), ncol(patch_gt), Inf
                     )
                 } else {
-                    loc <- vec_slice(self$area, i)
+                    loc <- vec_slice(metadata$area, i)
                     l <- (field(loc, "l") - 1L) * TABLE_COLS + 1L
                     r <- field(loc, "r") * TABLE_COLS
                     t <- (field(loc, "t") - 1L) * TABLE_ROWS + 1L
@@ -400,26 +416,22 @@ PatchAlignpatches <- ggproto(
             }
             gt_list[i] <- list(patch_gt)
         }
-        self$options_list <- NULL
-        self$gt_list <- gt_list
 
         # setup sizes for each row/column -----------------------
         gt <- self$set_sizes(
-            self$patches, self$gt_list, self$area, self$dims,
-            self$panel_widths, self$panel_heights,
+            metadata$patches, gt_list,
+            metadata$area, metadata$dims,
+            metadata$panel_widths, metadata$panel_heights,
             gt = gt
         )
-        self$panel_widths <- NULL
-        self$panel_heights <- NULL
 
         # add the panel position --------------------------------
         panel_pos <- list(
             t = TOP_BORDER + 1L,
             l = LEFT_BORDER + 1L,
-            b = TABLE_ROWS * self$dims[1L] - BOTTOM_BORDER,
-            r = TABLE_COLS * self$dims[2L] - RIGHT_BORDER
+            b = TABLE_ROWS * metadata$dims[1L] - BOTTOM_BORDER,
+            r = TABLE_COLS * metadata$dims[2L] - RIGHT_BORDER
         )
-        self$dims <- NULL
 
         # add guides into the final gtable ----------------------
         # Guide legends must be attached before calling `$set_grobs()`, because
@@ -429,16 +441,15 @@ PatchAlignpatches <- ggproto(
 
         # Separate guide legends between those to be collected by the parent
         # `alignpatches()` and those that remain attached to this subplot.
-        if (is.null(self$collected)) {
+        if (is.null(metadata$collected)) {
             self$collected_guides <- list()
         } else {
             # Store guides to be collected by the parent `alignpatches()`
-            self$collected_guides <- .subset(guides_list, self$collected)
+            self$collected_guides <- .subset(guides_list, metadata$collected)
             guides_list <- .subset(
                 guides_list,
-                setdiff(names(guides_list), self$collected)
+                setdiff(names(guides_list), metadata$collected)
             )
-            self$collected <- NULL
         }
         theme <- prop(options, "theme")
         gt <- self$attach_guide_list(
@@ -471,12 +482,12 @@ PatchAlignpatches <- ggproto(
         )
 
         # we only make the final grobs after sizes has been solved
-        if (self$top_level) {
+        if (metadata$top_level) {
             # we'll add background in ggalign_gtable() method
             self$set_grobs(
-                patches = self$patches,
-                gt_list = self$gt_list,
-                area = self$area,
+                patches = metadata$patches,
+                gt_list = gt_list,
+                area = metadata$area,
                 gt = gt
             )
         } else {
@@ -488,6 +499,10 @@ PatchAlignpatches <- ggproto(
                     name = "background", z = LAYOUT_BACKGROUND_Z
                 )
             }
+            self$patches <- metadata$patches
+            self$gt_list <- gt_list
+            self$borders_list <- metadata$borders_list
+            self$area <- metadata$area
             gt
         }
     },
