@@ -13,8 +13,10 @@
 #'
 #' `plot.tag.placement` (new in `ggalign`) determines where the tag is
 #' positioned—either within the plot itself (`"plot"`) or on the canvas where
-#' all plots are placed (`"canvas"`). When placed on the `canvas`, the tag will
-#' not move with the plots if you use `free_vp()` or other helper functions.
+#' all plots are placed (`"canvas"`). When set to `"canvas"`, the tag will be
+#' fixed and does not move with the plots, even when using `free_vp()` or other
+#' helper functions. This ensures that all tags are consistently aligned across
+#' the canvas.
 #'
 #' @param tags Tag templates for plots in the layout.
 #'   If `waiver()` (default), tags are inherited from the parent layout.

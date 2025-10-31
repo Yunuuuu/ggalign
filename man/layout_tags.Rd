@@ -58,8 +58,10 @@ is used.
 
 \code{plot.tag.placement} (new in \code{ggalign}) determines where the tag is
 positioned—either within the plot itself (\code{"plot"}) or on the canvas where
-all plots are placed (\code{"canvas"}). When placed on the \code{canvas}, the tag will
-not move with the plots if you use \code{free_vp()} or other helper functions.
+all plots are placed (\code{"canvas"}). When set to \code{"canvas"}, the tag will be
+fixed and does not move with the plots, even when using \code{free_vp()} or other
+helper functions. This ensures that all tags are consistently aligned across
+the canvas.
 }
 \examples{
 p1 <- ggplot(mtcars) +
