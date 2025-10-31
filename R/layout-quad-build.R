@@ -41,16 +41,16 @@ S7::method(patch, QuadLayout) <- function(x) {
     plot <- ggalign_build(x)
     Parent <- patch(plot)
     ggproto(NULL, Parent,
-        gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+        gtable = function(self, options) {
             # Preserve tag-related theme settings from the original layout
             # theme. These are intentionally not overridden so that
             # `Parent` retains full control over tag appearance and
             # positioning.
-            if (!is.null(theme)) {
+            if (!is.null(theme <- prop(options, "theme"))) {
                 prop(self$plot, "theme") <- prop(self$plot, "theme") +
                     (tag_theme(theme) + tag_theme(prop(x, "theme")))
             }
-            ggproto_parent(Parent, self)$gtable(theme, guides, tagger)
+            ggproto_parent(Parent, self)$gtable(options)
         }
     )
 }

@@ -145,6 +145,12 @@ S7::method(patch, alignpatches) <- function(x) {
 
 ##############################################################
 # For z in the gtable layout
+# 0L: layout background
+# 1L: background of the plot
+# 2L: plot table
+# 3L: foreground of the panel area
+# 4L: legends
+# 5L: tags
 LAYOUT_BACKGROUND_Z <- 0L
 PLOT_BACKGROUND_Z <- 1L
 PLOT_TABLE_Z <- 2L
@@ -152,12 +158,27 @@ LAYOUT_FOREGROUND_Z <- 3L
 GUIDE_LEGENDS_Z <- 4L
 TAGS_Z <- 5L
 
-# 0L: layout background
-# 1L: background of the plot
-# 2L: plot table
-# 3L: foreground of the panel area
-# 4L: legends
-# 5L: tags
+#' Options passed to the Patch `gtable` method
+#'
+#' This class defines the options that can be passed to the `gtable` method of a
+#' `Patch` object.  It includes:
+#'
+#' - `theme`: The theme to be applied, which can be either `NULL` or a ggplot2
+#'   [theme][ggplot2::theme] object.
+#' - `guides`: The guides for the plot, which can be `NULL` or a character
+#'   vector.
+#' - `tagger`: Either `NULL` (no tagging) or a `LayoutTagger` object that
+#'   provides a `$tag_table` method (accepting the `gtable` and `theme`)
+#'   used to add tag.
+#'
+#' @keywords internal
+patch_options <- S7::new_class("patch_options",
+    properties = list(
+        theme = S7::new_union(NULL, ggplot2::class_theme),
+        guides = S7::new_union(NULL, S7::class_character),
+        tagger = S7::new_union(NULL, S7::new_S3_class("ggalign::LayoutTagger"))
+    )
+)
 
 #' @importFrom ggplot2 ggproto
 #' @noRd
@@ -166,12 +187,12 @@ PatchAlignpatches <- ggproto(
     #' @importFrom gtable gtable gtable_add_grob
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
-    #' @importFrom S7 prop
-    gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+    #' @importFrom S7 prop prop<- set_props
+    gtable = function(self, options) {
         patches <- lapply(prop(self$plot, "plots"), function(p) {
             out <- patch(p)
             if (!is.null(out) &&
-                !inherits(out, sprintf("%s::Patch", pkg_nm()))) {
+                !inherits(out, "ggalign::Patch")) {
                 cli_abort("{.fn alignpatch} must return a {.cls Patch} object")
             }
             out
@@ -234,7 +255,8 @@ PatchAlignpatches <- ggproto(
         }
 
         # we define the global theme --------------------------
-        if (is.null(theme)) { # No parent theme provided
+        # No parent theme provided
+        if (is.null(theme <- prop(options, "theme"))) {
             top_level <- TRUE
             # by default, we use ggplot2 default theme
             theme <- prop(self$plot, "theme")
@@ -243,9 +265,10 @@ PatchAlignpatches <- ggproto(
             theme <- theme + prop(self$plot, "theme")
         }
         theme <- complete_theme(theme)
+        prop(options, "theme", check = FALSE) <- theme
 
         # by default, we won't collect any guide legends
-        collected <- guides
+        collected <- prop(options, "guides")
         guides <- prop(layout, "guides")
         if (is_string(guides)) {
             guides <- setup_guides(guides)
@@ -268,15 +291,17 @@ PatchAlignpatches <- ggproto(
         # - A single string representing the tag for the entire layout,
         # - NULL, meaning no tagging,
         # - Or a `LayoutTagger` object used to tag each plot individually.
-        tagger <- create_layout_tagger(prop(self$plot, "tags"), tagger)
-        if (!is.null(tagger) && !inherits(tagger, "LayoutTagger")) {
-            # If tagger is not a LayoutTagger, treat it as a single tag for the
-            # whole layout
-            tag <- tagger
-            tagger <- NULL
-        } else {
-            # Otherwise, no single tag for the whole layout
+        tag <- create_layout_tagger(
+            prop(self$plot, "tags"),
+            prop(options, "tagger")
+        )
+        if (is.null(tag) || inherits(tag, "ggalign::LayoutTagger")) {
+            prop(options, "tagger", check = FALSE) <- tag
             tag <- NULL
+        } else {
+            # If tag is a single string, treat it as a single tag for the
+            # whole layout
+            prop(options, "tagger", check = FALSE) <- NULL
         }
 
         # Let each patch to determine whether to collect guides
@@ -299,7 +324,7 @@ PatchAlignpatches <- ggproto(
                 .subset2(guides, i),
                 intersect(border_with_guides, .subset2(borders_list, i))
             )
-            gt <- patch$gtable(theme, g, tagger)
+            gt <- patch$gtable(set_props(options, guides = g))
             components <- patch$decompose_guides(gt, g)
             guides_list[i] <- list(.subset2(components, "guides"))
             gt_list[i] <- list(.subset2(components, "gt"))

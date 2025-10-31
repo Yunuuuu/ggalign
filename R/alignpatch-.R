@@ -197,16 +197,8 @@ Patch <- ggproto(
     #' [`standardized gtable`][standardized_gtable] object.
     #'
     #' **Arguments**
-    #' - `theme`: The global [`theme`][ggplot2::theme] of the parent
-    #'   [`alignpatches()`] object.
-    #' - `guides`: Specifies which sides of guide legends should be collected by
-    #'   the parent [`alignpatches()`] object. In most cases, this is the value
-    #'   returned by the subplot's `self$guides()` method. For plots along the
-    #'   border, any guide legends on that side will always be collected if any
-    #'   legends on that side of any subplot are being collected.
-    #' - `tagger`: Either `NULL` (no tagging) or a `LayoutTagger` object that
-    #'   provides a `$tag_table` method (accepting the `gtable` and `theme`)
-    #'   used to add tag.
+    #' - `options`: A [`patch_options`] object that contains various layout
+    #'   options.
     #'
     #' **Value**
     #' A standardized [`gtable`][gtable::gtable] object, or a simple
@@ -216,7 +208,7 @@ Patch <- ggproto(
     #' be a full table-based layout (`gtable`) for more complex arrangements or
     #' a simpler graphical object (`grob`) when only basic plot elements are
     #' involved.
-    gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+    gtable = function(self, options) {
         cli_abort("{.fn gtable} method is not defined")
     },
 

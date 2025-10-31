@@ -180,7 +180,7 @@ create_layout_tagger <- function(tags, parent) {
         )
     }
     ggproto(
-        "LayoutTagger", NULL,
+        "ggalign::LayoutTagger", NULL,
         tags = tags,
         prefix = prefix,
         suffix = suffix,

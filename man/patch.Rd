@@ -59,16 +59,8 @@ should be collected by the parent \code{\link[=alignpatches]{alignpatches()}} ob
 
 \strong{Arguments}
 \itemize{
-\item \code{theme}: The global \code{\link[ggplot2:theme]{theme}} of the parent
-\code{\link[=alignpatches]{alignpatches()}} object.
-\item \code{guides}: Specifies which sides of guide legends should be collected by
-the parent \code{\link[=alignpatches]{alignpatches()}} object. In most cases, this is the value
-returned by the subplot's \code{self$guides()} method. For plots along the
-border, any guide legends on that side will always be collected if any
-legends on that side of any subplot are being collected.
-\item \code{tagger}: Either \code{NULL} (no tagging) or a \code{LayoutTagger} object that
-provides a \verb{$tag_table} method (accepting the \code{gtable} and \code{theme})
-used to add tag.
+\item \code{options}: A \code{\link{patch_options}} object that contains various layout
+options.
 }
 
 \strong{Value}

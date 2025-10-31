@@ -129,8 +129,8 @@ patch.ggalign_inset <- function(x) {
     ggproto(
         "PatchWrapped",
         Parent,
-        gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
-            gt <- ggproto_parent(Parent, self)$gtable(theme, guides, tagger)
+        gtable = function(self, options) {
+            gt <- ggproto_parent(Parent, self)$gtable(options)
             # Note: When the gtable represents a facetted plot, the number
             # of rows/columns (heights or widths) will exceed
             #   TABLE_ROWS/COLS.

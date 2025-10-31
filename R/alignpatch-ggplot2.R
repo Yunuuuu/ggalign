@@ -57,7 +57,7 @@ grid.draw.patch_ggplot <- function(x, recording = TRUE) {
 
 ##################################################
 S7::method(ggalign_gtable, ggplot2::class_ggplot) <- function(x) {
-    patch(x)$gtable()
+    patch(x)$gtable(patch_options())
 }
 
 S7::method(ggalign_build, ggplot2::class_ggplot) <- function(x) x
@@ -80,12 +80,12 @@ S7::method(patch, ggplot2::class_ggplot) <- function(x) {
 #' @importFrom ggplot2 ggplotGrob update_labels complete_theme
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
-    gtable = function(self, theme = NULL, guides = NULL, tagger = NULL) {
+    gtable = function(self, options) {
         plot <- self$plot
-        if (is.null(theme)) {
+        if (is.null(prop(options, "theme"))) {
             theme <- plot$theme
         } else {
-            theme <- tag_theme(theme) + plot$theme
+            theme <- tag_theme(prop(options, "theme")) + plot$theme
         }
 
         # complete_theme() will ensure elements exist --------
@@ -100,7 +100,9 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         # always add strips columns and/or rows
         ans <- add_strips(ans, self$strip_pos)
         ans <- setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
-        if (!is.null(tagger)) ans <- tagger$tag_table(ans, theme)
+        if (!is.null(prop(options, "tagger"))) {
+            ans <- prop(options, "tagger")$tag_table(ans, theme)
+        }
         ans
     },
     border_sizes = function(self, gt = NULL, free = NULL) {
