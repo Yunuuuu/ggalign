@@ -96,30 +96,28 @@ A list with:
 sides specified in \code{guides} (or \code{NULL} if absent).
 }}
 
-\item{\code{tag}}{\strong{Description}
-(Optional method) Inserts the patch's gtable (including optional
-background) into the target canvas gtable.
+\item{\code{tag}}{Add a Tag to a \code{gtable}
 
-This method places the patch's gtable into a specified location of
-another gtable, preserving the background and plot layers separately if a
-background exists. The \code{t}, \code{l}, \code{b}, \code{r} arguments specify the position
-in the target gtable, and \code{bg_z} / \code{plot_z} define the stacking order
-(z-order) for background and plot.
+\strong{Description}:
+This function adds a tag to a given \code{gtable} at a specified position. The
+tag is added only if the \code{gtable} is standardized (i.e., it has the
+expected number of rows and columns)..
 
-\strong{Arguments}
+\strong{Arguments}:
 \itemize{
-\item \code{gtable}: the target canvas gtable into which the patch will be
-inserted.
-\item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
-\code{self$align_border()}.
-\item \code{t}, \code{l}, \code{b}, \code{r}: Integer positions (top, left, bottom, right)
-specifying where to insert the patch in the target gtable.
-\item \code{i}: Index of the current patch, used to generate unique grob names.
-\item \code{z}: Z-order for the tag grob (default \code{1L}).
+\item \code{gt}: A \code{gtable} object to which the tag will be added.
+\item \code{label}: A string representing the label or content for the tag.
+\item \code{theme}: The plot theme containing the style elements for the tag.
+\item \code{t}, \code{l}, \code{b}, \code{r}: Numeric values representing the top, left, bottom,
+and right margins (coordinates) for placing the tag on the \code{gtable}.
+\item \code{z}: A numeric value representing the z-order, controlling the stacking
+order of the tag relative to other elements in the \code{gtable}.
 }
 
-\strong{Value}
-The modified gtable with the patch's gtable added.}
+\strong{Value}:
+The modified \code{gtable} with the tag added. If the \code{gtable} is not
+standardized (i.e., it doesn't meet the row/column requirements), the
+function returns the original \code{gtable} without modification.}
 
 \item{\code{align_panel}}{\strong{Description}
 

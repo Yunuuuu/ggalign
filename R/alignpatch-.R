@@ -300,29 +300,37 @@ Patch <- ggproto(
 
     #' @field tag
     #'
-    #' **Description**
-    #' (Optional method) Inserts the patch's gtable (including optional
-    #' background) into the target canvas gtable.
+    #' Add a Tag to a `gtable`
     #'
-    #' This method places the patch's gtable into a specified location of
-    #' another gtable, preserving the background and plot layers separately if a
-    #' background exists. The `t`, `l`, `b`, `r` arguments specify the position
-    #' in the target gtable, and `bg_z` / `plot_z` define the stacking order
-    #' (z-order) for background and plot.
+    #' **Description**:
+    #' This function adds a tag to a given `gtable` at a specified position. The
+    #' tag is added only if the `gtable` is standardized (i.e., it has the
+    #' expected number of rows and columns)..
     #'
-    #' **Arguments**
-    #' - `gtable`: the target canvas gtable into which the patch will be
-    #'   inserted.
-    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
-    #'   `self$align_border()`.
-    #' - `t`, `l`, `b`, `r`: Integer positions (top, left, bottom, right)
-    #'   specifying where to insert the patch in the target gtable.
-    #' - `i`: Index of the current patch, used to generate unique grob names.
-    #' - `z`: Z-order for the tag grob (default `1L`).
+    #' **Arguments**:
+    #' - `gt`: A `gtable` object to which the tag will be added.
+    #' - `label`: A string representing the label or content for the tag.
+    #' - `theme`: The plot theme containing the style elements for the tag.
+    #' - `t`, `l`, `b`, `r`: Numeric values representing the top, left, bottom,
+    #'   and right margins (coordinates) for placing the tag on the `gtable`.
+    #' - `z`: A numeric value representing the z-order, controlling the stacking
+    #'   order of the tag relative to other elements in the `gtable`.
     #'
-    #' **Value**
-    #' The modified gtable with the patch's gtable added.
+    #' **Value**:
+    #' The modified `gtable` with the tag added. If the `gtable` is not
+    #' standardized (i.e., it doesn't meet the row/column requirements), the
+    #' function returns the original `gtable` without modification.
     tag = function(self, gt, label, theme, t, l, b, r, z) {
+        if (!is.gtable(gt)) {
+            return(gt)
+        }
+        heights <- .subset2(gt, "heights")
+        widths <- .subset2(gt, "widths")
+        # Note: When the gtable represents a facetted plot, the number of
+        #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
+        if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
+            return(gt)
+        }
         table_add_tag(gt, label, theme, t, l, b, r, z)
     },
 
@@ -423,42 +431,41 @@ Patch <- ggproto(
     #' @importFrom gtable is.gtable
     border_sizes = function(self, gt = NULL, free = NULL) {
         if (is.gtable(gt)) {
-            heights <- .subset2(gt, "heights")
-            widths <- .subset2(gt, "widths")
-            # Only compute border sizes for standardized gtables.
-            # Note: When the gtable represents a facetted plot, the number of
-            #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
-            if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
-                return(NULL)
-            }
-            if (any(free == "top")) {
-                top <- NULL
-            } else {
-                top <- heights[seq_len(TOP_BORDER)]
-            }
-            if (any(free == "bottom")) {
-                bottom <- NULL
-            } else {
-                bottom <- heights[
-                    (length(heights) - BOTTOM_BORDER + 1L):length(heights)
-                ]
-            }
-            if (any(free == "left")) {
-                left <- NULL
-            } else {
-                left <- widths[seq_len(LEFT_BORDER)]
-            }
-            if (any(free == "right")) {
-                right <- NULL
-            } else {
-                right <- widths[
-                    (length(widths) - RIGHT_BORDER + 1L):length(widths)
-                ]
-            }
-            list(top = top, left = left, bottom = bottom, right = right)
-        } else {
-            NULL
+            return(NULL)
         }
+
+        heights <- .subset2(gt, "heights")
+        widths <- .subset2(gt, "widths")
+        # Only compute border sizes for standardized gtables.
+        # Note: When the gtable represents a facetted plot, the number of
+        #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
+        if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
+            return(NULL)
+        }
+
+        if (any(free == "top")) {
+            top <- NULL
+        } else {
+            top <- heights[seq_len(TOP_BORDER)]
+        }
+        if (any(free == "bottom")) {
+            bottom <- NULL
+        } else {
+            bottom <- heights[
+                (length(heights) - BOTTOM_BORDER + 1L):length(heights)
+            ]
+        }
+        if (any(free == "left")) {
+            left <- NULL
+        } else {
+            left <- widths[seq_len(LEFT_BORDER)]
+        }
+        if (any(free == "right")) {
+            right <- NULL
+        } else {
+            right <- widths[(length(widths) - RIGHT_BORDER + 1L):length(widths)]
+        }
+        list(top = top, left = left, bottom = bottom, right = right)
     },
 
     #' @field align_border
