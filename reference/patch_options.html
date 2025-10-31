@@ -51,7 +51,7 @@ Patch object.  It includes:"><meta property="og:image" content="https://yunuuuu.
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">patch_options</span><span class="op">(</span>theme <span class="op">=</span> <span class="cn">NULL</span>, guides <span class="op">=</span> <span class="cn">NULL</span>, tagger <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">patch_options</span><span class="op">(</span>theme <span class="op">=</span> <span class="cn">NULL</span>, guides <span class="op">=</span> <span class="cn">NULL</span>, tag <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -61,9 +61,9 @@ Patch object.  It includes:"><meta property="og:image" content="https://yunuuuu.
 <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a> object.</p></li>
 <li><p><code>guides</code>: The guides for the plot, which can be <code>NULL</code> or a character
 vector.</p></li>
-<li><p><code>tagger</code>: Either <code>NULL</code> (no tagging) or a <code>LayoutTagger</code> object that
-provides a <code>$tag_table</code> method (accepting the <code>gtable</code> and <code>theme</code>)
-used to add tag.</p></li>
+<li><p><code>tag</code>: Either <code>NULL</code> (no tag), a single string, or a <code>LayoutTagger</code> object
+that provides a <code>$tag()</code> method to generate a tag string for tagging each
+plot individually.</p></li>
 </ul></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

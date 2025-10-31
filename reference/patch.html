@@ -84,29 +84,24 @@ the core methods for arranging and aligning subplots.</p>
     <h2 id="fields">Fields<a class="anchor" aria-label="anchor" href="#fields"></a></h2>
 
 
-<dl><dt><code>guides</code></dt>
+<dl><dt><code>setup_options</code></dt>
 <dd><p><strong>Description</strong></p>
-<p>(Optional method) Determines which sides of the guide legends should be
-collected by the parent <code><a href="alignpatches.html">alignpatches()</a></code> object.</p>
-<p>This per-plot method allows each subplot to modify the <code>guides</code> passed to
-the <code>self$decompose_guides()</code> method, ensuring that plots along the
-border collect their guide legends correctly. Such fine-grained control
-cannot be achieved when relying on only a single
-<code>self$decompose_guides()</code> method.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>guides</code>: The <code>guides</code> argument passed from the parent
-<code><a href="alignpatches.html">alignpatches()</a></code> object, specifying how legends should be combined or
-positioned. Possible values include <code>"top"</code>, <code>"left"</code>, <code>"bottom"</code>, and <code>"right"</code>.</p></li>
+<p>(Optional method) Sets up the options for the layout configuration.</p>
+<p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object that contains various layout
+options.</p></li>
 </ul><p><strong>Value</strong>
-A modified <code>guides</code> object indicating which sides of the guide legends
-should be collected by the parent <code><a href="alignpatches.html">alignpatches()</a></code> object.</p></dd>
+A modified <code>options</code> object.</p></dd>
 
 
 <dt><code>gtable</code></dt>
 <dd><p><strong>Description</strong></p>
 <p>(Required method) Constructs a
 <code><a href="standardized_gtable.html">standardized gtable</a></code> object.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object that contains various layout
-options.</p></li>
+<p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
+options. Typically, this is the value returned by the subplot's
+<code>self$setup_options()</code> method. For border plots, any guide options will
+include the borders if legends on that side of any subplots are being
+collected.</p></li>
 </ul><p><strong>Value</strong>
 A standardized <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, or a simple
 <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a></code> object.</p>
@@ -127,15 +122,35 @@ in the <code>gt</code> is removed to free up space, except for guides placed
 <p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
 <code>self$gtable()</code>.</p></li>
 <li><p><code>guides</code>: Specifies which sides of guide legends should be collected by
-the parent <code><a href="alignpatches.html">alignpatches()</a></code> object. In most cases, this is the value
-returned by the subplot's <code>self$guides()</code> method. For plots along the
-border, any guide legends on that side will always be collected if any
-legends on that side of any subplot are being collected.</p></li>
+the parent <code><a href="alignpatches.html">alignpatches()</a></code> object. In most cases, this is the guides
+value returned by the subplot's <code>self$setup_options()</code> method. For
+plots along the border, any guide legends on that side will always be
+collected if any legends on that side of any subplot are being
+collected.</p></li>
 </ul><p><strong>Value</strong>
 A list with:</p><ul><li><p><code>gt</code>: The updated gtable with guide legends removed (if applicable).</p></li>
 <li><p><code>guides</code>: A named list of collected guide grobs corresponding to the
 sides specified in <code>guides</code> (or <code>NULL</code> if absent).</p></li>
 </ul></dd>
+
+
+<dt><code>tag</code></dt>
+<dd><p>Add a Tag to a <code>gtable</code></p>
+<p><strong>Description</strong>:
+This function adds a tag to a given <code>gtable</code> at a specified position. The
+tag is added only if the <code>gtable</code> is standardized (i.e., it has the
+expected number of rows and columns)..</p>
+<p><strong>Arguments</strong>:</p><ul><li><p><code>gt</code>: A <code>gtable</code> object to which the tag will be added.</p></li>
+<li><p><code>label</code>: A string representing the label or content for the tag.</p></li>
+<li><p><code>theme</code>: The plot theme containing the style elements for the tag.</p></li>
+<li><p><code>t</code>, <code>l</code>, <code>b</code>, <code>r</code>: Numeric values representing the top, left, bottom,
+and right margins (coordinates) for placing the tag on the <code>gtable</code>.</p></li>
+<li><p><code>z</code>: A numeric value representing the z-order, controlling the stacking
+order of the tag relative to other elements in the <code>gtable</code>.</p></li>
+</ul><p><strong>Value</strong>:
+The modified <code>gtable</code> with the tag added. If the <code>gtable</code> is not
+standardized (i.e., it doesn't meet the row/column requirements), the
+function returns the original <code>gtable</code> without modification.</p></dd>
 
 
 <dt><code>align_panel</code></dt>
@@ -240,9 +255,9 @@ Adds the main plot gtable into the target gtable.</p></dd>
 <p>Checks whether the object inherits from the <code><a href="alignpatches.html">alignpatches()</a></code> <code>Patch</code>
 representation.</p>
 <p>If <code>TRUE</code>, the fields <code>self$patches</code>, <code>self$gt_list</code>, and
-<code>self$borders_list</code> are expected to exist in the <code>$align_border()</code> and
-<code>$place()</code> methods. See the <code>patch.ggalign_free_lab</code> function in the
-<code>alignpatch-free-lab.R</code> script for an example of usage.</p>
+<code>self$borders_list</code> are expected to exist. See the
+<code>patch.ggalign_free_lab</code> function in the <code>alignpatch-free-lab.R</code> script
+for an example of usage.</p>
 <p><strong>Value</strong>
 Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code>self</code> is a
 <code>PatchAlignpatches</code> object.</p></dd>
@@ -264,12 +279,13 @@ Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_guides: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     gtable: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     guides: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     is_alignpatches: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_gt: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     plot: ggplot2::ggplot, ggplot, ggplot2::gg, S7_object, gg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_options: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     tag: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class PatchGgplot, ggalign::Patch, gg&gt;</span>
 </code></pre></div>
     </div>

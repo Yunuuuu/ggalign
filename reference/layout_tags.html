@@ -105,9 +105,16 @@ tag and separated by <code>sep</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The appearance of tags is controlled by the <code>plot.tag</code>, <code>plot.tag.position</code>,
-and <code>plot.tag.location</code> theme elements. Tag styling is first retrieved from
-the plot's theme; if not found there, the layout's theme is used.</p>
+    <p>The appearance of tags is controlled by the <code>plot.tag</code>, <code>plot.tag.placement</code>,
+<code>plot.tag.position</code>, and <code>plot.tag.location</code> theme elements. Tag styling is
+first retrieved from the plot's theme; if not found there, the layout's theme
+is used.</p>
+<p><code>plot.tag.placement</code> (new in <code>ggalign</code>) determines where the tag is
+positioned—either within the plot itself (<code>"plot"</code>) or on the canvas where
+all plots are placed (<code>"canvas"</code>). When set to <code>"canvas"</code>, the tag will be
+fixed and does not move with the plots, even when using <code><a href="free.html">free_vp()</a></code> or other
+helper functions. This ensures that all tags are consistently aligned across
+the canvas.</p>
     </div>
 
     <div class="section level2">
