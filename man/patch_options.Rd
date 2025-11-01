@@ -16,9 +16,12 @@ This class defines the options that can be passed to the \code{gtable} method of
 \link[ggplot2:theme]{theme} object.
 \item \code{guides}: The guides for the plot, which can be \code{NULL} or a character
 vector.
-\item \code{tag}: Either \code{NULL} (no tag), a single string, or a \code{LayoutTagger} object
-that provides a \verb{$tag()} method to generate a tag string for tagging each
-plot individually.
+\item \code{tag}: Can be \code{NULL} (no tag), a single string, or a \code{LayoutTagger} object
+that provides a \verb{$tag()} method to generate a tag string for each plot.
+The \code{LayoutTagger} is used specifically by \code{\link[=alignpatches]{alignpatches()}}. For
+individual plots, you typically call the \verb{$tag()} method of the
+\code{LayoutTagger} object to return a string, which triggers the internal
+\code{Patch$tag()} method to add a tag.
 \item \code{metadata}: A list of additional metadata. This can store any extra
 information relevant to the patch, such as custom parameters or auxiliary
 data that do not fit into the other categories.

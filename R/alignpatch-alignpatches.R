@@ -167,9 +167,12 @@ TAGS_Z <- 5L
 #'   [theme][ggplot2::theme] object.
 #' - `guides`: The guides for the plot, which can be `NULL` or a character
 #'   vector.
-#' - `tag`: Either `NULL` (no tag), a single string, or a `LayoutTagger` object
-#'   that provides a `$tag()` method to generate a tag string for tagging each
-#'   plot individually.
+#' - `tag`: Can be `NULL` (no tag), a single string, or a `LayoutTagger` object
+#'   that provides a `$tag()` method to generate a tag string for each plot.
+#'   The `LayoutTagger` is used specifically by [`alignpatches()`]. For
+#'   individual plots, you typically call the `$tag()` method of the
+#'   `LayoutTagger` object to return a string, which triggers the internal
+#'   `Patch$tag()` method to add a tag.
 #' - `metadata`: A list of additional metadata. This can store any extra
 #'   information relevant to the patch, such as custom parameters or auxiliary
 #'   data that do not fit into the other categories.
@@ -240,17 +243,71 @@ PatchAlignpatches <- ggproto(
         # remove NULL patch -----------------------------------
         keep <- !vapply(patches, is.null, logical(1L), USE.NAMES = FALSE)
         patches <- vec_slice(patches, keep)
+        area <- vec_slice(area, keep)
 
-        # if no plots, we do nothing --------------------------
+        #######################################################
+        # prepare the final options ---------------------------
         options <- options %||% patch_options()
-        metadata <- list(patches = patches)
+        metadata <- list(
+            area = area,
+            dims = dims,
+            panel_widths = panel_widths,
+            panel_heights = panel_heights,
+            patches = patches
+        )
+
+        # we define the guides --------------------------------
+        collected <- prop(options, "guides")
+        guides <- prop(layout, "guides")
+        if (is_string(guides)) {
+            guides <- setup_guides(guides)
+        } else if (is_waiver(guides)) {
+            guides <- collected
+        }
+        metadata$collected <- collected
+        prop(options, "guides", check = FALSE) <- guides
+
+        # we define the global theme -------------------------
+        # No parent theme provided
+        if (is.null(theme <- prop(options, "theme"))) {
+            # by default, we use ggplot2 default theme
+            theme <- prop(self$plot, "theme")
+            metadata$top_level <- TRUE
+        } else {
+            theme <- theme + prop(self$plot, "theme")
+            metadata$top_level <- FALSE
+        }
+        prop(options, "theme", check = FALSE) <- complete_theme(theme)
+
+        # A tag can be:
+        # - A single string representing the tag for the entire layout,
+        # - NULL, meaning no tagging,
+        # - Or a `LayoutTagger` object used to tag each plot individually.
+        prop(options, "tag", check = FALSE) <- create_layout_tagger(
+            prop(self$plot, "tags"),
+            prop(options, "tag")
+        )
+
         if (is_empty(patches)) {
-            prop(options, "metadata", check = FALSE) <- metadata
             return(options)
         }
 
+        #######################################################
+        # define the options for the sub-plots ----------------
+        # the `alignpatches` tag is a string, it means regarding the
+        # alignpatches as a single plot, instead of tag each sub-plots, so we
+        # remove the tag
+        subplots_options <- options
+        if (is_string(prop(subplots_options, "tag"))) {
+            prop(subplots_options, "tag") <- NULL
+        }
+
+        # Let each patch to determine the options
+        options_list <- lapply(patches, function(patch) {
+            patch$setup_options(subplots_options)
+        })
+
         # add borders to patch --------------------------------
-        area <- vec_slice(area, keep)
         borders_list <- vector("list", length(patches))
         for (i in seq_along(patches)) {
             borders_list[i] <- list(c(
@@ -268,53 +325,6 @@ PatchAlignpatches <- ggproto(
                 }
             ))
         }
-
-        #######################################################
-        # we define the global theme -------------------------
-        # No parent theme provided
-        if (is.null(theme <- prop(options, "theme"))) {
-            # by default, we use ggplot2 default theme
-            theme <- prop(self$plot, "theme")
-            metadata$top_level <- TRUE
-        } else {
-            theme <- theme + prop(self$plot, "theme")
-            metadata$top_level <- FALSE
-        }
-        prop(options, "theme", check = FALSE) <- complete_theme(theme)
-
-        collected <- prop(options, "guides")
-        guides <- prop(layout, "guides")
-        if (is_string(guides)) {
-            guides <- setup_guides(guides)
-        } else if (is_waiver(guides)) {
-            guides <- collected
-        }
-        prop(options, "guides", check = FALSE) <- guides
-
-        # A tag can be:
-        # - A single string representing the tag for the entire layout,
-        # - NULL, meaning no tagging,
-        # - Or a `LayoutTagger` object used to tag each plot individually.
-        prop(options, "tag", check = FALSE) <- create_layout_tagger(
-            prop(self$plot, "tags"),
-            prop(options, "tag")
-        )
-
-        #######################################################
-        # define the options for the sub-plots ----------------
-        # the `alignpatches` tag is a string, it means regarding the
-        # alignpatches as a single plot, instead of tag each sub-plots, so we
-        # remove the tag
-        subplots_options <- options
-        if (is_string(prop(subplots_options, "tag"))) {
-            prop(subplots_options, "tag") <- NULL
-        }
-
-        # Let each patch to determine the options
-        options_list <- lapply(patches, function(patch) {
-            patch$setup_options(subplots_options)
-        })
-
         # Always ensure that plots placed in a border collect their guides, if
         # any guides are to be collected in that border.
         # This prevents overlap, unless the guides will be collected by the
@@ -334,20 +344,11 @@ PatchAlignpatches <- ggproto(
             prop(options, "guides", check = FALSE) <- g
             options
         })
+        metadata$borders_list <- borders_list
+        metadata$options_list <- options_list
 
         #######################################################
-        prop(options, "metadata", check = FALSE) <- c(
-            metadata,
-            list(
-                collected = collected,
-                borders_list = borders_list,
-                options_list = options_list,
-                area = area,
-                dims = dims,
-                panel_widths = panel_widths,
-                panel_heights = panel_heights
-            )
-        )
+        prop(options, "metadata", check = FALSE) <- metadata
         options
     },
 
@@ -357,11 +358,12 @@ PatchAlignpatches <- ggproto(
     #' @importFrom S7 prop prop<-
     #' @importFrom rlang arg_match0 is_empty
     gtable = function(self, options) {
-        metadata <- prop(options, "metadata")
-        if (is.null(.subset2(metadata, "patches"))) {
+        if (is.null(theme <- prop(options, "theme"))) {
             cli_abort("Run `$setup_options()` to initialize the patches first.")
         }
 
+        metadata <- prop(options, "metadata")
+        # if no plots, we do nothing --------------------------
         if (is_empty(.subset2(metadata, "patches"))) {
             return(make_patch_table())
         }
@@ -451,7 +453,6 @@ PatchAlignpatches <- ggproto(
                 setdiff(names(guides_list), metadata$collected)
             )
         }
-        theme <- prop(options, "theme")
         gt <- self$attach_guide_list(
             gt = gt,
             guide_list = guides_list,

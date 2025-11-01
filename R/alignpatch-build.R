@@ -17,7 +17,7 @@ S7::method(ggalign_gtable, alignpatches) <- function(x) {
     table <- p$gtable(options)
 
     # ensure theme has no missing value
-    theme <- complete_theme(prop(x, "theme") %||% theme_get())
+    theme <- prop(options, "theme")
     matrix_respect <- is.matrix(.subset2(table, "respect"))
 
     # Add title, subtitle, and caption -------------------
