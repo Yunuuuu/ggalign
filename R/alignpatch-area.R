@@ -192,16 +192,16 @@ as_areas.character <- function(x) {
 as_areas.patch_area <- function(x) new_areas(unclass(x))
 
 #' @importFrom grid unit
-#' @importFrom ggplot2 aes margin theme ggplot
-#' @importFrom utils packageVersion
+#' @importFrom ggplot2 ggplot aes margin theme
+#' @keywords internal
 #' @export
-plot.ggalign_area <- function(x, ...) {
-    data <- vec_data(x)
+ggplot.ggalign_area <- function(data, ...) {
+    data <- vec_data(data)
     data$l <- data$l - 0.45
     data$r <- data$r + 0.45
     data$t <- data$t - 0.45
     data$b <- data$b + 0.45
-    data$name <- as.factor(vec_seq_along(x))
+    data$name <- as.factor(vec_seq_along(data))
     b_fun <- function(lim) {
         if (lim[1] < lim[2]) {
             lim <- seq(floor(lim[1]), ceiling(lim[2]), by = 1)
@@ -210,7 +210,7 @@ plot.ggalign_area <- function(x, ...) {
         }
         lim[-c(1, length(lim))]
     }
-    ggplot(data) +
+    ggplot(data, ...) +
         ggplot2::geom_rect(
             aes(
                 xmin = .data$l, xmax = .data$r,
@@ -234,3 +234,6 @@ plot.ggalign_area <- function(x, ...) {
             plot.margin = margin(10, 10, 10, 10)
         )
 }
+
+#' @export
+plot.ggalign_area <- function(x, ...) plot(ggplot(data = x, ...))
