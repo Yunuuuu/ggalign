@@ -61,9 +61,12 @@ Patch object.  It includes:"><meta property="og:image" content="https://yunuuuu.
 <a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a> object.</p></li>
 <li><p><code>guides</code>: The guides for the plot, which can be <code>NULL</code> or a character
 vector.</p></li>
-<li><p><code>tag</code>: Either <code>NULL</code> (no tag), a single string, or a <code>LayoutTagger</code> object
-that provides a <code>$tag()</code> method to generate a tag string for tagging each
-plot individually.</p></li>
+<li><p><code>tag</code>: Can be <code>NULL</code> (no tag), a single string, or a <code>LayoutTagger</code> object
+that provides a <code>$tag()</code> method to generate a tag string for each plot.
+The <code>LayoutTagger</code> is used specifically by <code><a href="alignpatches.html">alignpatches()</a></code>. For
+individual plots, you typically call the <code>$tag()</code> method of the
+<code>LayoutTagger</code> object to return a string, which triggers the internal
+<code>Patch$tag()</code> method to add a tag.</p></li>
 <li><p><code>metadata</code>: A list of additional metadata. This can store any extra
 information relevant to the patch, such as custom parameters or auxiliary
 data that do not fit into the other categories.</p></li>
