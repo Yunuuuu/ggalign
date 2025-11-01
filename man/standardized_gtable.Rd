@@ -20,7 +20,7 @@ It is used internally for layout normalization and patch-based alignment.
    3 \tab \code{title} \tab Main title \cr
    4 \tab \code{subtitle} \tab Subtitle \cr
    5 \tab \code{guide-box-top} \tab Legend box at top \cr
-   6 \tab \code{legend.box.spacing} \tab Space between legend and main area \cr
+   6 \tab \code{guide-box-spacing} \tab Space between legend and main area \cr
    7 \tab \code{patch-title-top} \tab Top patch title \cr
    8 \tab \code{xlab-top} \tab Top x-axis label (rare) \cr
    9 \tab \code{axis-top} \tab Top axis ticks and labels \cr
@@ -30,7 +30,7 @@ It is used internally for layout normalization and patch-based alignment.
    13 \tab \code{axis-bottom} \tab Bottom axis ticks and labels \cr
    14 \tab \code{xlab-bottom} \tab Bottom x-axis label \cr
    15 \tab \code{patch-title-bottom} \tab Top patch title \cr
-   16 \tab \code{legend.box.spacing} \tab Space before bottom legend box \cr
+   16 \tab \code{guide-box-spacing} \tab Space before bottom legend box \cr
    17 \tab \code{guide-box-bottom} \tab Bottom legend box \cr
    18 \tab \code{caption} \tab Caption or footnote text \cr
    19 \tab \code{tag-bottom} \tab Bottom tag (optional) \cr
@@ -44,7 +44,7 @@ It is used internally for layout normalization and patch-based alignment.
    1 \tab \code{margin-left} \tab External left spacing \cr
    2 \tab \code{tag-left} \tab Optional side tag \cr
    3 \tab \code{guide-box-left} \tab Left legend box \cr
-   4 \tab \code{legend.box.spacing} \tab Space between legend and panel \cr
+   4 \tab \code{guide-box-spacing} \tab Space between legend and panel \cr
    5 \tab \code{patch-title-left} \tab Left patch title \cr
    6 \tab \code{ylab-left} \tab Left y-axis label \cr
    7 \tab \code{axis-left} \tab Left axis ticks and labels \cr
@@ -54,7 +54,7 @@ It is used internally for layout normalization and patch-based alignment.
    11 \tab \code{axis-right} \tab Right axis ticks and labels \cr
    12 \tab \code{ylab-right} \tab Right y-axis label \cr
    13 \tab \code{patch-title-right} \tab Right patch title \cr
-   14 \tab \code{legend.box.spacing} \tab Space before right legend box \cr
+   14 \tab \code{guide-box-spacing} \tab Space before right legend box \cr
    15 \tab \code{guide-box-right} \tab Right legend box \cr
    16 \tab \code{tag-right} \tab Optional tag on right side \cr
    17 \tab \code{margin-right} \tab External right spacing \cr
