@@ -51,28 +51,31 @@ patch.ggalign_free_lab <- function(x) {
     ggproto(
         "PatchFreeLab", Parent,
         labs = setup_position(attr(x, "ggalign_free_labs", exact = TRUE)),
-        align_border = function(self, gt, t = NULL, l = NULL,
-                                b = NULL, r = NULL) {
+        align_border = function(self, gt, t, l, b, r, options) {
             if (self$is_alignpatches()) {
-                self$gt_list <- .mapply(
+                metadata <- prop(options, "metadata")
+                metadata$gt_list <- .mapply(
                     function(gt, borders) {
                         if (is.null(borders)) return(gt) # styler: off
                         self$free_lab(gt, intersect(borders, self$labs))
                     },
-                    list(gt = self$gt_list, borders = self$borders_list),
+                    list(
+                        gt = .subset2(metadata, "gt_list"),
+                        borders = .subset2(metadata, "borders_list")
+                    ),
                     NULL
                 )
+                prop(options, "metadata", check = FALSE) <- metadata
             } else {
                 gt <- self$free_lab(gt, self$labs)
             }
-            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r, options)
         },
         free_lab = function(self, gt, labs) {
             if (length(labs) && is.gtable(gt)) {
                 panel_pos <- find_panel(gt)
                 for (lab in labs) {
-                    name <- switch(
-                        lab,
+                    name <- switch(lab,
                         top = "xlab-axis-t",
                         left = "ylab-axis-l",
                         bottom = "xlab-axis-b",

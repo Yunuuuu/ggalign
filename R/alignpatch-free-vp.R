@@ -46,7 +46,8 @@ patch.ggalign_free_vp <- function(x) {
     ggproto(
         "PatchFreeViewport", Parent,
         vp = attr(x, "ggalign_free_vp", exact = TRUE),
-        place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
+        place = function(self, gtable, gt, t, l, b, r, i,
+                         bg_z, plot_z, options) {
             if (is.grob(gt)) {
                 vp <- self$vp$vp
                 widths <- .subset2(gt, "widths")

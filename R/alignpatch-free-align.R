@@ -54,10 +54,10 @@
 #' # We could use `free_lab` to fix the layout in a different way
 #' align_plots(p1, free_lab(p2), ncol = 1L)
 #'
-#' # `free_border()` is similar with `free_lab`, they have a distinction in 
-#' # terms of placement on either the top or bottom side of the panel. 
-#' # Specifically, the top side contains the `title` and `subtitle`, while the 
-#' # bottom side contains the `caption`. `free_border()` also free these 
+#' # `free_border()` is similar with `free_lab`, they have a distinction in
+#' # terms of placement on either the top or bottom side of the panel.
+#' # Specifically, the top side contains the `title` and `subtitle`, while the
+#' # bottom side contains the `caption`. `free_border()` also free these
 #' # elements when ligning.
 #' p3 <- ggplot(mtcars) +
 #'     geom_point(aes(hp, wt, colour = mpg)) +
@@ -152,17 +152,15 @@ patch.ggalign_free_align <- function(x) {
     ggproto(
         "PatchFreeAlign", Parent,
         axes = setup_position(attr(x, "ggalign_free_axes", exact = TRUE)),
-        border_sizes = function(self, gt, free = NULL) {
-            ggproto_parent(Parent, self)$border_sizes(
-                gt, union(free, self$axes)
-            )
+        border_sizes = function(self, gt, options) {
+            out <- ggproto_parent(Parent, self)$border_sizes(gt, options)
+            free_spaces(out, self$axes)
         },
-        align_border = function(self, gt, t = NULL, l = NULL,
-                                b = NULL, r = NULL) {
+        align_border = function(self, gt, t, l, b, r, options) {
             for (axis in substring(self$axes, 1L, 1L)) {
                 assign(x = axis, value = NULL, envir = environment())
             }
-            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r, options)
         }
     )
 }

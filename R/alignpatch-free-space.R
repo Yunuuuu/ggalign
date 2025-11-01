@@ -45,10 +45,19 @@ patch.ggalign_free_space <- function(x) {
     ggproto(
         "PatchFreeSpace", Parent,
         spaces = setup_position(attr(x, "ggalign_free_spaces", exact = TRUE)),
-        border_sizes = function(self, gt, free = NULL) {
-            ggproto_parent(Parent, self)$border_sizes(
-                gt, union(free, self$spaces)
-            )
+        border_sizes = function(self, gt, options) {
+            out <- ggproto_parent(Parent, self)$border_sizes(gt, options)
+            free_spaces(out, self$spaces)
         }
     )
+}
+
+free_spaces <- function(sizes, free = NULL) {
+    if (!is.list(sizes) || is.null(free)) {
+        return(sizes)
+    }
+    for (border in free) {
+        sizes[border] <- list(NULL)
+    }
+    sizes
 }

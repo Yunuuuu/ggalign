@@ -104,7 +104,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         ans <- add_strips(ans, self$strip_pos)
         setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
     },
-    border_sizes = function(self, gt = NULL, free = NULL) {
+    border_sizes = function(self, gt, options) {
         out <- ggproto_parent(Patch, self)$border_sizes(gt, free)
         if (is.null(out) || self$strip_pos == "inside") {
             return(out)
@@ -123,7 +123,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         }
         out
     },
-    align_border = function(self, gt, t = NULL, l = NULL, b = NULL, r = NULL) {
+    align_border = function(self, gt, t, l, b, r, options) {
         if (self$strip_pos == "outside") {
             if (!is.null(t)) {
                 t[length(t) - 1:0] <- t[length(t) - 0:1]
@@ -138,7 +138,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
                 r[1:2] <- r[2:1]
             }
         }
-        ggproto_parent(Patch, self)$align_border(gt, t, l, b, r)
+        ggproto_parent(Patch, self)$align_border(gt, t, l, b, r, options)
     }
 )
 

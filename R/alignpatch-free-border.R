@@ -60,8 +60,7 @@ patch.ggalign_free_border <- function(x) {
     ggproto(
         "PatchFreeBorder", Parent,
         borders = setup_position(attr(x, "ggalign_free_borders", exact = TRUE)),
-        align_border = function(self, gt, t = NULL, l = NULL,
-                                b = NULL, r = NULL) {
+        align_border = function(self, gt, t, l, b, r, options) {
             if (is.gtable(gt)) {
                 for (border in self$borders) {
                     # Adjust the gtable margins to match the aligned border
@@ -97,7 +96,7 @@ patch.ggalign_free_border <- function(x) {
                     }
                 }
             }
-            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r, options)
         }
     )
 }

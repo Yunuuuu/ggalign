@@ -191,10 +191,10 @@ align_plots(free_align(p1, axes = "l"), p2, ncol = 1L)
 # We could use `free_lab` to fix the layout in a different way
 align_plots(p1, free_lab(p2), ncol = 1L)
 
-# `free_border()` is similar with `free_lab`, they have a distinction in 
-# terms of placement on either the top or bottom side of the panel. 
-# Specifically, the top side contains the `title` and `subtitle`, while the 
-# bottom side contains the `caption`. `free_border()` also free these 
+# `free_border()` is similar with `free_lab`, they have a distinction in
+# terms of placement on either the top or bottom side of the panel.
+# Specifically, the top side contains the `title` and `subtitle`, while the
+# bottom side contains the `caption`. `free_border()` also free these
 # elements when ligning.
 p3 <- ggplot(mtcars) +
     geom_point(aes(hp, wt, colour = mpg)) +

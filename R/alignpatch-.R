@@ -177,7 +177,10 @@ Patch <- ggproto(
     #'   options.
     #'
     #' **Value**
-    #' A modified `options` object.
+    #' A modified `options` object, which will be used by all subsequent
+    #' methods. Additionally, for border plots, any guide options will
+    #' automatically include the borders if legends from that side of any
+    #' subplots are being collected.
     setup_options = function(self, options = NULL) {
         options <- options %||% patch_options()
         if (is_tagger(tagger <- prop(options, "tag"))) {
@@ -196,9 +199,7 @@ Patch <- ggproto(
     #' **Arguments**
     #' - `options`: A [`patch_options`] object containing various layout
     #'   options. Typically, this is the value returned by the subplot's
-    #'   `self$setup_options()` method. For border plots, any guide options will
-    #'   include the borders if legends on that side of any subplots are being
-    #'   collected.
+    #'   `self$setup_options()` method.
     #'
     #' **Value**
     #' A standardized [`gtable`][gtable::gtable] object, or a simple
@@ -226,11 +227,10 @@ Patch <- ggproto(
     #' **Arguments**
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
     #'   `self$gtable()`.
-    #' - `guides`: Specifies which sides of guide legends should be collected by
-    #'   the parent [`alignpatches()`] object. In most cases, this is the guides
-    #'   value returned by the subplot's `self$setup_options()` method. For
-    #'   plots along the border, any guide legends on that side will always be
-    #'   collected if any legends on that side of any subplot are being
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method. For border plots, any guide options will
+    #'   include the borders if legends on that side of any subplots are being
     #'   collected.
     #'
     #' **Value**
@@ -238,9 +238,9 @@ Patch <- ggproto(
     #' - `gt`: The updated gtable with guide legends removed (if applicable).
     #' - `guides`: A named list of collected guide grobs corresponding to the
     #'   sides specified in `guides` (or `NULL` if absent).
-    decompose_guides = function(self, gt, guides) {
+    decompose_guides = function(self, gt, options) {
         # By default we only consider gtable has guide legend box
-        if (is.null(guides) || !is.gtable(gt)) {
+        if (is.null(guides <- prop(options, "guides")) || !is.gtable(gt)) {
             return(list(gt = gt, guides = list()))
         }
 
@@ -310,17 +310,19 @@ Patch <- ggproto(
     #' **Arguments**:
     #' - `gt`: A `gtable` object to which the tag will be added.
     #' - `label`: A string representing the label or content for the tag.
-    #' - `theme`: The plot theme containing the style elements for the tag.
     #' - `t`, `l`, `b`, `r`: Numeric values representing the top, left, bottom,
     #'   and right margins (coordinates) for placing the tag on the `gtable`.
     #' - `z`: A numeric value representing the z-order, controlling the stacking
     #'   order of the tag relative to other elements in the `gtable`.
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method.
     #'
     #' **Value**:
     #' The modified `gtable` with the tag added. If the `gtable` is not
     #' standardized (i.e., it doesn't meet the row/column requirements), the
     #' function returns the original `gtable` without modification.
-    tag = function(self, gt, label, theme, t, l, b, r, z) {
+    tag = function(self, gt, label, t, l, b, r, z, options) {
         if (!is.gtable(gt)) {
             return(gt)
         }
@@ -331,7 +333,7 @@ Patch <- ggproto(
         if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
             return(gt)
         }
-        table_add_tag(gt, label, theme, t, l, b, r, z)
+        table_add_tag(gt, label, prop(options, "theme"), t, l, b, r, z)
     },
 
     #' @field align_panel
@@ -354,6 +356,11 @@ Patch <- ggproto(
     #' - `panel_width`/`panel_height`: Unit objects specifying the desired panel
     #'   size. If the internal numeric value of either is `NA`, the size is
     #'   computed from the gtable (`gt`).
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method. For border plots, any guide options will
+    #'   include the borders if legends on that side of any subplots are being
+    #'   collected.
     #'
     #' **Value**
     #' A list with components:
@@ -363,7 +370,7 @@ Patch <- ggproto(
     #'
     #' @importFrom ggplot2 find_panel
     #' @importFrom gtable is.gtable
-    align_panel = function(self, gt, panel_width, panel_height) {
+    align_panel = function(self, gt, panel_width, panel_height, options) {
         # By default we only consider gtable has panel area
         if (!is.gtable(gt)) {
             return(list(width = panel_width, height = panel_height))
@@ -418,8 +425,9 @@ Patch <- ggproto(
     #' **Arguments**
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
     #'   `self$decompose_guides()`.
-    #' - `free`: Optional. Borders to exclude when calculating sizes. Possible
-    #'   values include `r oxford_and(.TLBR)`.
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method.
     #'
     #' **Value**
     #' A list with components:
@@ -429,7 +437,7 @@ Patch <- ggproto(
     #' - `right`: `unit` values for the right borders or `NULL`.
     #'
     #' @importFrom gtable is.gtable
-    border_sizes = function(self, gt = NULL, free = NULL) {
+    border_sizes = function(self, gt, options) {
         if (!is.gtable(gt)) {
             return(NULL)
         }
@@ -442,29 +450,12 @@ Patch <- ggproto(
         if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
             return(NULL)
         }
-
-        if (any(free == "top")) {
-            top <- NULL
-        } else {
-            top <- heights[seq_len(TOP_BORDER)]
-        }
-        if (any(free == "bottom")) {
-            bottom <- NULL
-        } else {
-            bottom <- heights[
-                (length(heights) - BOTTOM_BORDER + 1L):length(heights)
-            ]
-        }
-        if (any(free == "left")) {
-            left <- NULL
-        } else {
-            left <- widths[seq_len(LEFT_BORDER)]
-        }
-        if (any(free == "right")) {
-            right <- NULL
-        } else {
-            right <- widths[(length(widths) - RIGHT_BORDER + 1L):length(widths)]
-        }
+        top <- heights[seq_len(TOP_BORDER)]
+        left <- widths[seq_len(LEFT_BORDER)]
+        bottom <- heights[
+            (length(heights) - BOTTOM_BORDER + 1L):length(heights)
+        ]
+        right <- widths[(length(widths) - RIGHT_BORDER + 1L):length(widths)]
         list(top = top, left = left, bottom = bottom, right = right)
     },
 
@@ -481,11 +472,14 @@ Patch <- ggproto(
     #' - `t`, `l`, `b`, `r`: Optional numeric vectors specifying new sizes for
     #'   the top, left, bottom, and right borders, respectively. Each vector
     #'   replaces the corresponding entries in `gt$heights` or `gt$widths`.
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method.
     #'
     #' **Value**
     #' A modified [`gtable`][gtable::gtable] object.
     #' @importFrom gtable is.gtable
-    align_border = function(self, gt, t = NULL, l = NULL, b = NULL, r = NULL) {
+    align_border = function(self, gt, t, l, b, r, options) {
         if (!is.gtable(gt)) return(gt) # styler: off
         if (!is.null(t)) gt$heights[seq_along(t)] <- t
         if (!is.null(l)) gt$widths[seq_along(l)] <- l
@@ -522,6 +516,9 @@ Patch <- ggproto(
     #' - `i`: Index of the current patch, used to generate unique grob names.
     #' - `bg_z`: Z-order for the background grob (default `1L`).
     #' - `plot_z`: Z-order for the plot grob (default `2L`).
+    #' - `options`: A [`patch_options`] object containing various layout
+    #'   options. Typically, this is the value returned by the subplot's
+    #'   `self$setup_options()` method.
     #'
     #' **Details**
     #' - If the patch includes a grob named `"background"`, it is separated from
@@ -531,18 +528,18 @@ Patch <- ggproto(
     #'
     #' **Value**
     #' The modified target canvas gtable with the patch's gtable added.
-    place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
+    place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z, options) {
         if (is.gtable(gt)) {
-            components <- self$decompose_bg(gt)
+            components <- self$decompose_bg(gt, options)
             if (!is.null(.subset2(components, "bg"))) {
                 gtable <- self$place_bg(
                     gtable, .subset2(components, "bg"),
-                    t, l, b, r, i, bg_z
+                    t, l, b, r, i, bg_z, options
                 )
             }
             gt <- .subset2(components, "gt")
         }
-        self$place_gt(gtable, gt, t, l, b, r, i, plot_z)
+        self$place_gt(gtable, gt, t, l, b, r, i, plot_z, options)
     },
 
     #' @field decompose_bg
@@ -554,7 +551,7 @@ Patch <- ggproto(
     #' A list with:
     #' - `bg`: The background grob (or `NULL` if absent)
     #' - `gt`: The gtable with background removed
-    decompose_bg = function(self, gt) {
+    decompose_bg = function(self, gt, options) {
         layout <- .subset2(gt, "layout")
         background <- layout$name == "background"
         if (!any(background)) {
@@ -569,7 +566,7 @@ Patch <- ggproto(
     #'
     #' **Description**
     #' Adds the background grob into the target gtable.
-    place_bg = function(self, gtable, bg, t, l, b, r, i, z = 1L) {
+    place_bg = function(self, gtable, bg, t, l, b, r, i, z, options) {
         gtable_add_grob(
             gtable,
             grobs = bg,
@@ -583,7 +580,7 @@ Patch <- ggproto(
     #'
     #' **Description**
     #' Adds the main plot gtable into the target gtable.
-    place_gt = function(self, gtable, gt, t, l, b, r, i, z = 2L) {
+    place_gt = function(self, gtable, gt, t, l, b, r, i, z, options) {
         gtable_add_grob(
             gtable,
             grobs = gt,
@@ -600,10 +597,9 @@ Patch <- ggproto(
     #' Checks whether the object inherits from the [alignpatches()] `Patch`
     #' representation.
     #'
-    #' If `TRUE`, the fields `self$patches`, `self$gt_list`, and
-    #' `self$borders_list` are expected to exist. See the
-    #' `patch.ggalign_free_lab` function in the `alignpatch-free-lab.R` script
-    #' for an example of usage.
+    #' If `TRUE`, the metadata in `options` will include `patches`, `gt_list`,
+    #' and `borders_list`. For an example of how these are used, refer to the
+    #' `patch.ggalign_free_lab` function in the `alignpatch-free-lab.R` script.
     #'
     #' **Value**
     #' Logical value (`TRUE` or `FALSE`) indicating whether `self` is a
