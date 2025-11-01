@@ -163,8 +163,6 @@ local(S7::method(`&`, list(alignpatches, S7::class_missing)) <-
 
 local(S7::method(`&`, list(alignpatches, S7::class_any)) <-
     function(e1, e2) {
-        if (is.null(e2)) return(e1) # styler: off
-
         # Get the name of what was passed in as e2, and pass along so that it
         # can be displayed in error messages
         e2name <- deparse(substitute(e2, env = caller_env(2L)))
@@ -184,6 +182,7 @@ alignpatches_apply <- S7::new_generic(
 
 S7::method(alignpatches_apply, list(alignpatches, S7::class_any)) <-
     function(plot, object, objectname) {
+        if (is.null(object)) return(plot) # styler: off
         prop(plot, "plots", check = FALSE) <- lapply(
             prop(plot, "plots"), function(plot) {
                 alignpatches_apply(plot, object, objectname)

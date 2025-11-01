@@ -78,15 +78,16 @@ local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     ggalign_update(e1, e2, e2name)
 })
 
-#' @include layout-.R
-local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
-    if (missing(e2)) {
+local(S7::method(`+`, list(LayoutProto, S7::class_missing)) <-
+    function(e1, e2) {
         cli_abort(c(
             "Cannot use {.code -} with a single argument.",
             "i" = "Did you accidentally put {.code -} on a new line?"
         ))
-    }
+    })
 
+#' @include layout-.R
+local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     if (is.null(e2)) return(e1) # styler: off
 
     # Get the name of what was passed in as e2, and pass along so that it
@@ -95,15 +96,16 @@ local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     layout_apply_selected(e1, e2, e2name)
 })
 
-#' @include layout-.R
-local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
-    if (missing(e2)) {
+local(S7::method(`+`, list(LayoutProto, S7::class_missing)) <-
+    function(e1, e2) {
         cli_abort(c(
             "Cannot use {.code &} with a single argument.",
             "i" = "Did you accidentally put {.code &} on a new line?"
         ))
-    }
+    })
 
+#' @include layout-.R
+local(S7::method(`&`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     if (is.null(e2)) return(e1) # styler: off
 
     # Get the name of what was passed in as e2, and pass along so that it
