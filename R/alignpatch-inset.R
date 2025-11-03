@@ -127,10 +127,10 @@ patch.ggalign_inset <- function(x) {
     Parent <- NextMethod()
     if (is.null(insets)) return(Parent) # styler: off
     ggproto(
-        "PatchWrapped",
+        "PatchInset",
         Parent,
-        gtable = function(self, options) {
-            gt <- ggproto_parent(Parent, self)$gtable(options)
+        gtable = function(self) {
+            gt <- ggproto_parent(Parent, self)$gtable()
             # Note: When the gtable represents a facetted plot, the number
             # of rows/columns (heights or widths) will exceed
             #   TABLE_ROWS/COLS.

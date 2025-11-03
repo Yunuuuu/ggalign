@@ -42,8 +42,5 @@ test_that("patch.free_vp ggproto object overrides align_border", {
         ggplot2::geom_point()
     p <- free_vp(p)
     obj <- patch(p)
-
     expect_s3_class(obj, "PatchFreeViewport")
-    expect_true(is.function(obj$align_border))
-    expect_identical(attr(p, "ggalign_free_vp"), obj$vp)
 })

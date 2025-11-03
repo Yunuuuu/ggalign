@@ -315,27 +315,25 @@ patch.ggalign_mark <- function(x) {
     Parent <- NextMethod()
     ggproto(
         "PatchAlignMark", Parent,
-        link_data = link_data,
-        border_sizes = function(self, gt, options) {
-            out <- ggproto_parent(Parent, self)$border_sizes(gt, options)
+        border_sizes = function(self, gt) {
+            out <- ggproto_parent(Parent, self)$border_sizes(gt)
             free_spaces(out, .TLBR)
         },
-        align_border = function(self, gt, t, l, b, r, options) {
+        align_border = function(self, gt, t, l, b, r) {
             gt
         },
-        place = function(self, gtable, gt, t, l, b, r, i,
-                         bg_z, plot_z, options) {
+        place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
             ggproto_parent(Parent, self)$place(
                 gtable, gt,
                 t + TOP_BORDER, l + LEFT_BORDER,
                 t + TOP_BORDER, l + LEFT_BORDER,
-                i, bg_z, plot_z, options
+                i, bg_z, plot_z
             )
         },
-        place_gt = function(self, gtable, gt, t, l, b, r, i, z, options) {
+        place_gt = function(self, gtable, gt, t, l, b, r, i, z) {
             ggproto_parent(Parent, self)$place_gt(
-                gtable, markGrob(gt, self$link_data),
-                t, l, b, r, i, z, options
+                gtable, markGrob(gt, link_data),
+                t, l, b, r, i, z
             )
         }
     )

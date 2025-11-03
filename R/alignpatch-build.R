@@ -13,11 +13,11 @@ S7::method(ggalign_build, alignpatches) <- function(x) x
 #' @importFrom S7 prop
 S7::method(ggalign_gtable, alignpatches) <- function(x) {
     p <- patch(x)
-    options <- p$setup_options(patch_options())
-    table <- p$gtable(options)
+    p$setup(patch_options())
+    table <- p$gtable()
 
     # ensure theme has no missing value
-    theme <- prop(options, "theme")
+    theme <- prop(p$options, "theme")
     matrix_respect <- is.matrix(.subset2(table, "respect"))
 
     # Add title, subtitle, and caption -------------------

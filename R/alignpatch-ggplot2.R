@@ -58,7 +58,8 @@ grid.draw.patch_ggplot <- function(x, recording = TRUE) {
 ##################################################
 S7::method(ggalign_gtable, ggplot2::class_ggplot) <- function(x) {
     p <- patch(x)
-    p$gtable(p$setup_options(patch_options()))
+    p$setup(patch_options())
+    p$gtable()
 }
 
 S7::method(ggalign_build, ggplot2::class_ggplot) <- function(x) x
@@ -81,7 +82,7 @@ S7::method(patch, ggplot2::class_ggplot) <- function(x) {
 #' @importFrom ggplot2 ggplotGrob update_labels complete_theme
 #' @include alignpatch-.R
 PatchGgplot <- ggproto("PatchGgplot", Patch,
-    setup_options = function(self, options = NULL) {
+    setup = function(self, options = NULL) {
         if (is.null(prop(options, "theme"))) {
             theme <- self$plot$theme
         } else {
@@ -92,11 +93,11 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         # here: we remove tick length when the tick is blank
         theme <- setup_tick_length_element(theme)
         prop(options, "theme", check = FALSE) <- theme
-        ggproto_parent(Patch, self)$setup_options(options)
+        ggproto_parent(Patch, self)$setup(options)
     },
-    gtable = function(self, options) {
+    gtable = function(self) {
         plot <- self$plot
-        theme <- prop(options, "theme")
+        theme <- self$get_option("theme")
         plot$theme <- theme
         ans <- ggplotGrob(plot)
         self$strip_pos <- find_strip_pos(ans, theme)
@@ -104,8 +105,8 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         ans <- add_strips(ans, self$strip_pos)
         setup_patch_title(ans, plot$ggalign_patch_title, theme = theme)
     },
-    border_sizes = function(self, gt, options) {
-        out <- ggproto_parent(Patch, self)$border_sizes(gt, free)
+    border_sizes = function(self, gt) {
+        out <- ggproto_parent(Patch, self)$border_sizes(gt)
         if (is.null(out) || self$strip_pos == "inside") {
             return(out)
         }
@@ -123,7 +124,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
         }
         out
     },
-    align_border = function(self, gt, t, l, b, r, options) {
+    align_border = function(self, gt, t, l, b, r) {
         if (self$strip_pos == "outside") {
             if (!is.null(t)) {
                 t[length(t) - 1:0] <- t[length(t) - 0:1]
@@ -138,7 +139,7 @@ PatchGgplot <- ggproto("PatchGgplot", Patch,
                 r[1:2] <- r[2:1]
             }
         }
-        ggproto_parent(Patch, self)$align_border(gt, t, l, b, r, options)
+        ggproto_parent(Patch, self)$align_border(gt, t, l, b, r)
     }
 )
 

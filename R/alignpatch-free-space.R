@@ -42,12 +42,12 @@ free_space.ggalign_free_space <- function(plot, spaces = "tlbr") {
 #' @export
 patch.ggalign_free_space <- function(x) {
     Parent <- NextMethod()
+    spaces <- setup_position(attr(x, "ggalign_free_spaces", exact = TRUE))
     ggproto(
         "PatchFreeSpace", Parent,
-        spaces = setup_position(attr(x, "ggalign_free_spaces", exact = TRUE)),
-        border_sizes = function(self, gt, options) {
-            out <- ggproto_parent(Parent, self)$border_sizes(gt, options)
-            free_spaces(out, self$spaces)
+        border_sizes = function(self, gt) {
+            out <- ggproto_parent(Parent, self)$border_sizes(gt)
+            free_spaces(out, spaces)
         }
     )
 }

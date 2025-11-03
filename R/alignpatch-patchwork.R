@@ -67,15 +67,19 @@ patch.wrapped_patch <- patch.patch
 PatchPatchworkPatch <- ggproto(
     "PatchPatchworkPatch", Patch,
     # `patch` from `patchwork`: patchwork::plot_spacer
-    setup_options = function(self, options) {
+    setup = function(self, options) {
         prop(options, "theme", check = FALSE) <- prop(options, "theme") %||%
             theme_get()
-        ggproto_parent(Patch, self)$setup_options(options)
+        ggproto_parent(Patch, self)$setup(options)
     },
     #' @importFrom gtable gtable_add_rows gtable_add_cols
     #' @importFrom ggplot2 find_panel
-    gtable = function(self, options) {
-        guides <- if (length(prop(options, "guides"))) "collect" else "keep"
+    gtable = function(self) {
+        if (length(self$get_option("guides"))) {
+            guides <- "collect"
+        } else {
+            guides <- "keep"
+        }
         ans <- patchwork::patchGrob(self$plot, guides = guides)
         # add rows and columns for `patch_title()`
         for (border in .TLBR) {

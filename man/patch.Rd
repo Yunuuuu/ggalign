@@ -25,38 +25,74 @@ and handling guide legends.
 In \code{alignpatches()}, each subplot is regarded as a \code{patch}, and \strong{a
 corresponding \code{Patch} object is required} for proper alignment and layout
 operations. \code{Patch} is a \code{\link[ggplot2:ggproto]{ggproto()}} object that provides
-the core methods for arranging and aligning subplots.
+the core methods for arranging and aligning the plots.
 }
 \section{Fields}{
 
 \describe{
-\item{\code{setup_options}}{\strong{Description}
+\item{\code{options}}{A \code{\link{patch_options}} object used to align the plot.}
 
-(Optional method) Sets up the options for the layout configuration.
+\item{\code{data}}{A list containing metadata used to align the plot.}
+
+\item{\code{set_options}}{\strong{Description}
+
+Sets multiple options at once in the \code{options} field. This method allows
+you to provide one or more key-value pairs, where each key represents an
+option name and its corresponding value is assigned to that option.
+
+\strong{Arguments}
+\itemize{
+\item \code{...}: Key-value pairs to set specific properties of the \code{options}
+object. Each argument should be of the form \code{name = value}, where
+\code{name} is the option name and \code{value} is the value to assign to it.
+}}
+
+\item{\code{set_option}}{\strong{Description}
+
+Sets a specific option in the \code{options} field. This method allows you to
+modify individual properties of the \code{options} object by providing a
+key-value pair.
+
+\strong{Arguments}
+\itemize{
+\item \code{name}: The name of the option to be set (as a character string).
+\item \code{value}: The value to assign to the specified option.
+\item \code{check}: Logical, if \code{TRUE} (default), checks the validity of the
+option before assigning it. Set to \code{FALSE} to bypass the check.
+}
+
+\strong{Arguments}
+\itemize{
+\item \code{...}: Key-value pairs to set specific properties of the \code{options}
+object.
+}}
+
+\item{\code{get_option}}{\strong{Description}
+
+Retrieves a specific option from the \code{options} field.
+
+\strong{Arguments}
+\itemize{
+\item \code{option}: The name of the option to retrieve.
+}
+
+\strong{Value}
+The value of the specified option.}
+
+\item{\code{setup}}{\strong{Description}
+
+(Optional method) Sets up the \code{options} and \code{data} for the plot.
 
 \strong{Arguments}
 \itemize{
 \item \code{options}: A \code{\link{patch_options}} object that contains various layout
 options.
-}
-
-\strong{Value}
-A modified \code{options} object. All other methods will use the optiosn
-returned by this method.  In addition, For border plots, any guide
-options will include the borders if legends on that side of any
-subplots are being collected.}
+}}
 
 \item{\code{gtable}}{\strong{Description}
 
 (Required method) Constructs a
 \code{\link[=standardized_gtable]{standardized gtable}} object.
-
-\strong{Arguments}
-\itemize{
-\item \code{options}: A \code{\link{patch_options}} object containing various layout
-options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method.
-}
 
 \strong{Value}
 A standardized \code{\link[gtable:gtable]{gtable}} object, or a simple
@@ -81,11 +117,6 @@ in the \code{gt} is removed to free up space, except for guides placed
 \itemize{
 \item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
 \code{self$gtable()}.
-\item \code{options}: A \code{\link{patch_options}} object containing various layout
-options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method. For border plots, any guide options will
-include the borders if legends on that side of any subplots are being
-collected.
 }
 
 \strong{Value}
@@ -111,11 +142,6 @@ expected number of rows and columns)..
 and right margins (coordinates) for placing the tag on the \code{gtable}.
 \item \code{z}: A numeric value representing the z-order, controlling the stacking
 order of the tag relative to other elements in the \code{gtable}.
-\item \code{options}: A \code{\link{patch_options}} object containing various layout
-options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method. For border plots, any guide options will
-include the borders if legends on that side of any subplots are being
-collected.
 }
 
 \strong{Value}:
@@ -143,11 +169,6 @@ single-panel layouts when \code{respect = TRUE}.
 \item \code{panel_width}/\code{panel_height}: Unit objects specifying the desired panel
 size. If the internal numeric value of either is \code{NA}, the size is
 computed from the gtable (\code{gt}).
-\item \code{options}: A \code{\link{patch_options}} object containing various layout
-options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method. For border plots, any guide options will
-include the borders if legends on that side of any subplots are being
-collected.
 }
 
 \strong{Value}
@@ -166,9 +187,6 @@ A list with components:
 \itemize{
 \item \code{gt}: A \code{\link[gtable:gtable]{gtable}} object, usually returned by
 \code{self$decompose_guides()}.
-\item \code{options}: A \code{\link{patch_options}} object containing various layout
-options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method.
 }
 
 \strong{Value}
@@ -193,9 +211,6 @@ entries in its \code{heights} and \code{widths} vectors..
 \item \code{t}, \code{l}, \code{b}, \code{r}: Optional numeric vectors specifying new sizes for
 the top, left, bottom, and right borders, respectively. Each vector
 replaces the corresponding entries in \code{gt$heights} or \code{gt$widths}.
-\item \code{options}: A \code{\link{patch_options}} object containing various layout
-options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method.
 }
 
 \strong{Value}
@@ -224,7 +239,7 @@ specifying where to insert the patch in the target gtable.
 \item \code{plot_z}: Z-order for the plot grob (default \code{2L}).
 \item \code{options}: A \code{\link{patch_options}} object containing various layout
 options. Typically, this is the value returned by the subplot's
-\code{self$setup_options()} method.
+\code{self$setup()} method.
 }
 
 \strong{Details}
@@ -259,7 +274,7 @@ Adds the main plot gtable into the target gtable.}
 Checks whether the object inherits from the \code{\link[=alignpatches]{alignpatches()}} \code{Patch}
 representation.
 
-If \code{TRUE}, the metadata in \code{options} will include \code{patches}, \code{gt_list},
+If \code{TRUE}, the \code{self$data} will include \code{patches}, \code{gt_list},
 and \code{borders_list}. For an example of how these are used, refer to the
 \code{patch.ggalign_free_lab} function in the \code{alignpatch-free-lab.R} script.
 

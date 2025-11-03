@@ -40,7 +40,7 @@ S7::method(ggalign_build, QuadLayout) <- function(x) {
 S7::method(patch, QuadLayout) <- function(x) {
     Parent <- patch(ggalign_build(x))
     ggproto(NULL, Parent,
-        setup_options = function(self, options) {
+        setup = function(self, options) {
             # Preserve tag-related theme settings from the original layout
             # theme. These are intentionally not overridden so that
             # `PatchAlignpatches` retains full control over tag appearance and
@@ -49,7 +49,7 @@ S7::method(patch, QuadLayout) <- function(x) {
                 prop(self$plot, "theme") <- prop(self$plot, "theme") +
                     (tag_theme(theme) + tag_theme(prop(x, "theme")))
             }
-            ggproto_parent(Parent, self)$setup_options(options)
+            ggproto_parent(Parent, self)$setup(options)
         }
     )
 }

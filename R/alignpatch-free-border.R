@@ -57,12 +57,12 @@ free_border.ggalign_free_border <- function(plot, borders = "tlbr") {
 #' @export
 patch.ggalign_free_border <- function(x) {
     Parent <- NextMethod()
+    borders <- setup_position(attr(x, "ggalign_free_borders", exact = TRUE))
     ggproto(
         "PatchFreeBorder", Parent,
-        borders = setup_position(attr(x, "ggalign_free_borders", exact = TRUE)),
-        align_border = function(self, gt, t, l, b, r, options) {
+        align_border = function(self, gt, t, l, b, r) {
             if (is.gtable(gt)) {
-                for (border in self$borders) {
+                for (border in borders) {
                     # Adjust the gtable margins to match the aligned border
                     # sizes
                     if (border == "top") {
@@ -96,7 +96,7 @@ patch.ggalign_free_border <- function(x) {
                     }
                 }
             }
-            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r, options)
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
         }
     )
 }

@@ -43,16 +43,15 @@ free_vp.ggalign_free_vp <- function(plot, x = 0.5, y = 0.5,
 #' @export
 patch.ggalign_free_vp <- function(x) {
     Parent <- NextMethod()
+    viewport <- attr(x, "ggalign_free_vp", exact = TRUE)
     ggproto(
         "PatchFreeViewport", Parent,
-        vp = attr(x, "ggalign_free_vp", exact = TRUE),
-        place = function(self, gtable, gt, t, l, b, r, i,
-                         bg_z, plot_z, options) {
+        place = function(self, gtable, gt, t, l, b, r, i, bg_z, plot_z) {
             if (is.grob(gt)) {
-                vp <- self$vp$vp
+                vp <- viewport$vp
                 widths <- .subset2(gt, "widths")
                 heights <- .subset2(gt, "heights")
-                if (isTRUE(self$vp$resize)) {
+                if (isTRUE(viewport$resize)) {
                     if (is.na(as.numeric(vp$width))) {
                         # we guess the width from the gtable
                         if (all(is_absolute_unit(widths))) {

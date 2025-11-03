@@ -48,28 +48,27 @@ free_lab.ggalign_free_lab <- function(plot, labs = "tlbr") {
 #' @export
 patch.ggalign_free_lab <- function(x) {
     Parent <- NextMethod()
+    labs <- setup_position(attr(x, "ggalign_free_labs", exact = TRUE))
+
     ggproto(
         "PatchFreeLab", Parent,
-        labs = setup_position(attr(x, "ggalign_free_labs", exact = TRUE)),
-        align_border = function(self, gt, t, l, b, r, options) {
+        align_border = function(self, gt, t, l, b, r) {
             if (self$is_alignpatches()) {
-                metadata <- prop(options, "metadata")
-                metadata$gt_list <- .mapply(
+                self$data$gt_list <- .mapply(
                     function(gt, borders) {
                         if (is.null(borders)) return(gt) # styler: off
-                        self$free_lab(gt, intersect(borders, self$labs))
+                        self$free_lab(gt, intersect(borders, labs))
                     },
                     list(
-                        gt = .subset2(metadata, "gt_list"),
-                        borders = .subset2(metadata, "borders_list")
+                        gt = .subset2(self$data, "gt_list"),
+                        borders = .subset2(self$data, "borders_list")
                     ),
                     NULL
                 )
-                prop(options, "metadata", check = FALSE) <- metadata
             } else {
-                gt <- self$free_lab(gt, self$labs)
+                gt <- self$free_lab(gt, labs)
             }
-            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r, options)
+            ggproto_parent(Parent, self)$align_border(gt, t, l, b, r)
         },
         free_lab = function(self, gt, labs) {
             if (length(labs) && is.gtable(gt)) {

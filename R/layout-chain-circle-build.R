@@ -315,7 +315,7 @@ S7::method(ggalign_gtable, CircleLayout) <- function(x) {
 S7::method(patch, CircleLayout) <- function(x) {
     build <- ggalign_build(x)
     ggproto(NULL, Patch,
-        setup_options = function(self, options = NULL) {
+        setup = function(self, options = NULL) {
             # Preserve tag-related theme settings from the original layout
             # theme. These are intentionally not overridden so that
             # `PatchAlignpatches` retains full control over tag appearance and
@@ -324,7 +324,7 @@ S7::method(patch, CircleLayout) <- function(x) {
                 prop(options, "theme", check = FALSE) <- prop(build, "theme") +
                     (tag_theme(theme) + tag_theme(prop(x, "theme")))
             }
-            ggproto_parent(Patch, self)$setup_options(options)
+            ggproto_parent(Patch, self)$setup(options)
         },
         gtable = function(self, options) ggalign_gtable(build)
     )

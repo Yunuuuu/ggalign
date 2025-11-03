@@ -33,5 +33,4 @@ test_that("patch.free_lab() returns a ggproto object with labs", {
     p <- free_lab(p, "b")
     proto <- patch(p)
     expect_s3_class(proto, "PatchFreeLab")
-    expect_equal(proto$labs, "bottom")
 })
