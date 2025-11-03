@@ -158,45 +158,6 @@ LAYOUT_FOREGROUND_Z <- 3L
 GUIDE_LEGENDS_Z <- 4L
 TAGS_Z <- 5L
 
-#' Options passed to the Patch `gtable` method
-#'
-#' This class defines the options that can be passed to the `gtable` method of a
-#' `Patch` object.  It includes:
-#'
-#' - `theme`: The theme to be applied, which can be either `NULL` or a ggplot2
-#'   [theme][ggplot2::theme] object.
-#' - `guides`: The guides for the plot, which can be `NULL` or a character
-#'   vector.
-#' - `tag`: Can be `NULL` (no tag), a single string, or a `LayoutTagger` object
-#'   that provides a `$tag()` method to generate a tag string for each plot.
-#'   The `LayoutTagger` is used specifically by [`alignpatches()`]. For
-#'   individual plots, you typically call the `$tag()` method of the
-#'   `LayoutTagger` object to return a string, which triggers the internal
-#'   `Patch$tag()` method to add a tag.
-#' - `metadata`: A list of additional metadata. This can store any extra
-#'   information relevant to the patch, such as custom parameters or auxiliary
-#'   data that do not fit into the other categories.
-#'
-#' @keywords internal
-patch_options <- S7::new_class("patch_options",
-    properties = list(
-        theme = S7::new_union(NULL, ggplot2::class_theme),
-        guides = S7::new_union(NULL, S7::class_character),
-        tag = S7::new_property(
-            S7::new_union(
-                NULL, S7::class_character,
-                S7::new_S3_class("ggalign::LayoutTagger")
-            ),
-            validator = function(value) {
-                if (is.character(value) && length(value) != 1L) {
-                    return("must be a single string or `LayoutTagger` object")
-                }
-            }
-        ),
-        metadata = S7::class_list
-    )
-)
-
 #' @importFrom ggplot2 ggproto
 #' @noRd
 PatchAlignpatches <- ggproto(
