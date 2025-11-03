@@ -32,8 +32,6 @@ the core methods for arranging and aligning the plots.
 \describe{
 \item{\code{options}}{A \code{\link{patch_options}} object used to align the plot.}
 
-\item{\code{data}}{A list containing metadata used to align the plot.}
-
 \item{\code{set_options}}{\strong{Description}
 
 Sets multiple options at once in the \code{options} field. This method allows

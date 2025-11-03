@@ -206,11 +206,6 @@ Patch <- ggproto(
     #' A [`patch_options`] object used to align the plot.
     options = NULL,
 
-    #' @field data
-    #'
-    #' A list containing metadata used to align the plot.
-    data = NULL,
-
     #' @field set_options
     #'
     #' **Description**
