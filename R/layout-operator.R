@@ -78,7 +78,7 @@ local(S7::method(`+`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     ggalign_update(e1, e2, e2name)
 })
 
-local(S7::method(`+`, list(LayoutProto, S7::class_missing)) <-
+local(S7::method(`-`, list(LayoutProto, S7::class_missing)) <-
     function(e1, e2) {
         cli_abort(c(
             "Cannot use {.code -} with a single argument.",
@@ -96,7 +96,7 @@ local(S7::method(`-`, list(LayoutProto, S7::class_any)) <- function(e1, e2) {
     layout_apply_selected(e1, e2, e2name)
 })
 
-local(S7::method(`+`, list(LayoutProto, S7::class_missing)) <-
+local(S7::method(`&`, list(LayoutProto, S7::class_missing)) <-
     function(e1, e2) {
         cli_abort(c(
             "Cannot use {.code &} with a single argument.",
