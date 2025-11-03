@@ -363,11 +363,12 @@ PatchAlignpatches <- ggproto(
     #' @importFrom S7 prop prop<-
     #' @importFrom rlang arg_match0 is_empty
     gtable = function(self) {
-        if (is.null(metadata <- self$data)) {
+        if (is.null(theme <- self$get_option("theme"))) {
             cli_abort("Run `$setup()` to initialize the patches first.")
         }
 
         # if no plots, we do nothing --------------------------
+        metadata <- self$data
         if (is_empty(.subset2(metadata, "patches"))) {
             return(make_patch_table())
         }
@@ -418,7 +419,6 @@ PatchAlignpatches <- ggproto(
             b = TABLE_ROWS * metadata$dims[1L] - BOTTOM_BORDER,
             r = TABLE_COLS * metadata$dims[2L] - RIGHT_BORDER
         )
-        theme <- self$get_option("theme")
         gt <- self$attach_guide_list(
             gt = gt,
             guide_list = metadata$guides_list,
