@@ -47,8 +47,9 @@ free_lab.ggalign_free_lab <- function(plot, labs = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 patch.ggalign_free_lab <- function(x) {
-    Parent <- NextMethod()
     labs <- setup_position(attr(x, "ggalign_free_labs", exact = TRUE))
+    attr(x, "ggalign_free_labs") <- NULL
+    Parent <- NextMethod()
 
     ggproto(
         "PatchFreeLab", Parent,

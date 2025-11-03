@@ -148,8 +148,9 @@ free_align.ggalign_free_align <- function(plot, axes = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 patch.ggalign_free_align <- function(x) {
-    Parent <- NextMethod()
     axes <- setup_position(attr(x, "ggalign_free_axes", exact = TRUE))
+    attr(x, "ggalign_free_axes") <- NULL
+    Parent <- NextMethod()
     ggproto(
         "PatchFreeAlign", Parent,
         border_sizes = function(self, gt) {

@@ -35,10 +35,11 @@ free_guide.ggalign_free_guide <- function(plot, guides = "tlbr") {
 #' @importFrom ggplot2 ggproto ggproto_parent
 #' @export
 patch.ggalign_free_guide <- function(x) {
-    Parent <- NextMethod()
     if (!is.null(guides <- attr(x, "ggalign_free_guides", exact = TRUE))) {
         guides <- setup_guides(guides)
+        attr(x, "ggalign_free_guides") <- NULL
     }
+    Parent <- NextMethod()
     ggproto("PatchFreeGuide", Parent,
         setup = function(self, options) {
             ggproto_parent(Parent, self)$setup(options)

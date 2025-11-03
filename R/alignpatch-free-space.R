@@ -41,8 +41,9 @@ free_space.ggalign_free_space <- function(plot, spaces = "tlbr") {
 #' @importFrom grid unit
 #' @export
 patch.ggalign_free_space <- function(x) {
-    Parent <- NextMethod()
     spaces <- setup_position(attr(x, "ggalign_free_spaces", exact = TRUE))
+    attr(x, "ggalign_free_spaces") <- NULL
+    Parent <- NextMethod()
     ggproto(
         "PatchFreeSpace", Parent,
         border_sizes = function(self, gt) {

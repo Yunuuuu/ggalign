@@ -56,8 +56,9 @@ free_border.ggalign_free_border <- function(plot, borders = "tlbr") {
 #' @importFrom gtable is.gtable
 #' @export
 patch.ggalign_free_border <- function(x) {
-    Parent <- NextMethod()
     borders <- setup_position(attr(x, "ggalign_free_borders", exact = TRUE))
+    attr(x, "ggalign_free_borders") <- NULL
+    Parent <- NextMethod()
     ggproto(
         "PatchFreeBorder", Parent,
         align_border = function(self, gt, t, l, b, r) {
