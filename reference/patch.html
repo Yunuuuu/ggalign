@@ -78,32 +78,66 @@ object.</p>
     <p>In <code><a href="alignpatches.html">alignpatches()</a></code>, each subplot is regarded as a <code>patch</code>, and <strong>a
 corresponding <code>Patch</code> object is required</strong> for proper alignment and layout
 operations. <code>Patch</code> is a <code><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto()</a></code> object that provides
-the core methods for arranging and aligning subplots.</p>
+the core methods for arranging and aligning the plots.</p>
     </div>
     <div class="section level2">
     <h2 id="fields">Fields<a class="anchor" aria-label="anchor" href="#fields"></a></h2>
 
 
-<dl><dt><code>setup_options</code></dt>
+<dl><dt><code>options</code></dt>
+<dd><p>A <code><a href="patch_options.html">patch_options</a></code> object used to align the plot.</p></dd>
+
+
+<dt><code>data</code></dt>
+<dd><p>A list containing metadata used to align the plot.</p></dd>
+
+
+<dt><code>set_options</code></dt>
 <dd><p><strong>Description</strong></p>
-<p>(Optional method) Sets up the options for the layout configuration.</p>
+<p>Sets multiple options at once in the <code>options</code> field. This method allows
+you to provide one or more key-value pairs, where each key represents an
+option name and its corresponding value is assigned to that option.</p>
+<p><strong>Arguments</strong></p><ul><li><p><code>...</code>: Key-value pairs to set specific properties of the <code>options</code>
+object. Each argument should be of the form <code>name = value</code>, where
+<code>name</code> is the option name and <code>value</code> is the value to assign to it.</p></li>
+</ul></dd>
+
+
+<dt><code>set_option</code></dt>
+<dd><p><strong>Description</strong></p>
+<p>Sets a specific option in the <code>options</code> field. This method allows you to
+modify individual properties of the <code>options</code> object by providing a
+key-value pair.</p>
+<p><strong>Arguments</strong></p><ul><li><p><code>name</code>: The name of the option to be set (as a character string).</p></li>
+<li><p><code>value</code>: The value to assign to the specified option.</p></li>
+<li><p><code>check</code>: Logical, if <code>TRUE</code> (default), checks the validity of the
+option before assigning it. Set to <code>FALSE</code> to bypass the check.</p></li>
+</ul><p><strong>Arguments</strong></p><ul><li><p><code>...</code>: Key-value pairs to set specific properties of the <code>options</code>
+object.</p></li>
+</ul></dd>
+
+
+<dt><code>get_option</code></dt>
+<dd><p><strong>Description</strong></p>
+<p>Retrieves a specific option from the <code>options</code> field.</p>
+<p><strong>Arguments</strong></p><ul><li><p><code>option</code>: The name of the option to retrieve.</p></li>
+</ul><p><strong>Value</strong>
+The value of the specified option.</p></dd>
+
+
+<dt><code>setup</code></dt>
+<dd><p><strong>Description</strong></p>
+<p>(Optional method) Sets up the <code>options</code> and <code>data</code> for the plot.</p>
 <p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object that contains various layout
 options.</p></li>
-</ul><p><strong>Value</strong>
-A modified <code>options</code> object. All other methods will use the optiosn
-returned by this method.  In addition, For border plots, any guide
-options will include the borders if legends on that side of any
-subplots are being collected.</p></dd>
+</ul></dd>
 
 
 <dt><code>gtable</code></dt>
 <dd><p><strong>Description</strong></p>
 <p>(Required method) Constructs a
 <code><a href="standardized_gtable.html">standardized gtable</a></code> object.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method.</p></li>
-</ul><p><strong>Value</strong>
+<p><strong>Value</strong>
 A standardized <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, or a simple
 <code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a></code> object.</p>
 <p>The returned object represents the graphical structure, which can either
@@ -122,11 +156,6 @@ in the <code>gt</code> is removed to free up space, except for guides placed
 <code>inside</code> the panel.</p>
 <p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
 <code>self$gtable()</code>.</p></li>
-<li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method. For border plots, any guide options will
-include the borders if legends on that side of any subplots are being
-collected.</p></li>
 </ul><p><strong>Value</strong>
 A list with:</p><ul><li><p><code>gt</code>: The updated gtable with guide legends removed (if applicable).</p></li>
 <li><p><code>guides</code>: A named list of collected guide grobs corresponding to the
@@ -146,11 +175,6 @@ expected number of rows and columns)..</p>
 and right margins (coordinates) for placing the tag on the <code>gtable</code>.</p></li>
 <li><p><code>z</code>: A numeric value representing the z-order, controlling the stacking
 order of the tag relative to other elements in the <code>gtable</code>.</p></li>
-<li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method. For border plots, any guide options will
-include the borders if legends on that side of any subplots are being
-collected.</p></li>
 </ul><p><strong>Value</strong>:
 The modified <code>gtable</code> with the tag added. If the <code>gtable</code> is not
 standardized (i.e., it doesn't meet the row/column requirements), the
@@ -173,11 +197,6 @@ single-panel layouts when <code>respect = TRUE</code>.</p>
 <li><p><code>panel_width</code>/<code>panel_height</code>: Unit objects specifying the desired panel
 size. If the internal numeric value of either is <code>NA</code>, the size is
 computed from the gtable (<code>gt</code>).</p></li>
-<li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method. For border plots, any guide options will
-include the borders if legends on that side of any subplots are being
-collected.</p></li>
 </ul><p><strong>Value</strong>
 A list with components:</p><ul><li><p><code>width</code>: Final panel width as a unit object</p></li>
 <li><p><code>height</code>: Final panel height as a unit object</p></li>
@@ -190,9 +209,6 @@ A list with components:</p><ul><li><p><code>width</code>: Final panel width as a
 <p>(Optional method) retrieve the border sizes of a gtable.</p>
 <p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
 <code>self$decompose_guides()</code>.</p></li>
-<li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method.</p></li>
 </ul><p><strong>Value</strong>
 A list with components:</p><ul><li><p><code>top</code>: <code>unit</code> values for the top borders or <code>NULL</code>.</p></li>
 <li><p><code>left</code>: <code>unit</code> values for the left borders or <code>NULL</code>.</p></li>
@@ -211,9 +227,6 @@ entries in its <code>heights</code> and <code>widths</code> vectors..</p>
 <li><p><code>t</code>, <code>l</code>, <code>b</code>, <code>r</code>: Optional numeric vectors specifying new sizes for
 the top, left, bottom, and right borders, respectively. Each vector
 replaces the corresponding entries in <code>gt$heights</code> or <code>gt$widths</code>.</p></li>
-<li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method.</p></li>
 </ul><p><strong>Value</strong>
 A modified <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object.</p></dd>
 
@@ -238,7 +251,7 @@ specifying where to insert the patch in the target gtable.</p></li>
 <li><p><code>plot_z</code>: Z-order for the plot grob (default <code>2L</code>).</p></li>
 <li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
 options. Typically, this is the value returned by the subplot's
-<code>self$setup_options()</code> method.</p></li>
+<code>self$setup()</code> method.</p></li>
 </ul><p><strong>Details</strong></p><ul><li><p>If the patch includes a grob named <code>"background"</code>, it is separated from
 the main plot and inserted independently from the plot grob.</p></li>
 <li><p>If no background is present, the entire gtable is inserted as the plot
@@ -270,7 +283,7 @@ Adds the main plot gtable into the target gtable.</p></dd>
 <dd><p><strong>Description</strong></p>
 <p>Checks whether the object inherits from the <code><a href="alignpatches.html">alignpatches()</a></code> <code>Patch</code>
 representation.</p>
-<p>If <code>TRUE</code>, the metadata in <code>options</code> will include <code>patches</code>, <code>gt_list</code>,
+<p>If <code>TRUE</code>, the <code>self$data</code> will include <code>patches</code>, <code>gt_list</code>,
 and <code>borders_list</code>. For an example of how these are used, refer to the
 <code>patch.ggalign_free_lab</code> function in the <code>alignpatch-free-lab.R</code> script.</p>
 <p><strong>Value</strong>
@@ -291,15 +304,20 @@ Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code
 <span class="r-out co"><span class="r-pr">#&gt;</span>     align_border: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     align_panel: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     border_sizes: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     data: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_guides: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     get_option: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     gtable: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     is_alignpatches: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     options: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_gt: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     plot: ggplot2::ggplot, ggplot, ggplot2::gg, S7_object, gg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     setup_options: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     set_option: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     set_options: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     setup: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     tag: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     super:  &lt;ggproto object: Class PatchGgplot, ggalign::Patch, gg&gt;</span>
 </code></pre></div>
