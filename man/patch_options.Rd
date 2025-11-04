@@ -2,13 +2,12 @@
 % Please edit documentation in R/alignpatch-.R
 \name{patch_options}
 \alias{patch_options}
-\title{Options passed to the Patch \code{gtable} method}
+\title{Options for Patch}
 \usage{
 patch_options(theme = NULL, guides = NULL, tag = NULL)
 }
 \description{
-This class defines the options that can be passed to the \code{gtable} method of a
-\code{Patch} object.  It includes:
+This class defines the options used by the \code{Patch} object. It includes:
 }
 \details{
 \itemize{

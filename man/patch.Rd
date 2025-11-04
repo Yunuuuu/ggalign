@@ -57,12 +57,6 @@ key-value pair.
 \item \code{value}: The value to assign to the specified option.
 \item \code{check}: Logical, if \code{TRUE} (default), checks the validity of the
 option before assigning it. Set to \code{FALSE} to bypass the check.
-}
-
-\strong{Arguments}
-\itemize{
-\item \code{...}: Key-value pairs to set specific properties of the \code{options}
-object.
 }}
 
 \item{\code{get_option}}{\strong{Description}

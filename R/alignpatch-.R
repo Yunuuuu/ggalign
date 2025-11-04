@@ -142,10 +142,9 @@ patch.default <- function(x) {
 #' @export
 patch.NULL <- function(x) NULL
 
-#' Options passed to the Patch `gtable` method
+#' Options for Patch
 #'
-#' This class defines the options that can be passed to the `gtable` method of a
-#' `Patch` object.  It includes:
+#' This class defines the options used by the `Patch` object. It includes:
 #'
 #' - `theme`: The theme to be applied, which can be either `NULL` or a ggplot2
 #'   [theme][ggplot2::theme] object.
@@ -234,10 +233,6 @@ Patch <- ggproto(
     #' - `value`: The value to assign to the specified option.
     #' - `check`: Logical, if `TRUE` (default), checks the validity of the
     #'   option before assigning it. Set to `FALSE` to bypass the check.
-    #'
-    #' **Arguments**
-    #' - `...`: Key-value pairs to set specific properties of the `options`
-    #'   object.
     #'
     set_option = function(self, name, value, check = TRUE) {
         prop(self$options, name, check = check) <- value
