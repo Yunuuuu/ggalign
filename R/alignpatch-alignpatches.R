@@ -167,6 +167,7 @@ PatchAlignpatches <- ggproto(
     #
     # A list containing metadata used to align the plot.
     alignpatches = NULL,
+    #' @importFrom rlang arg_match0
     setup = function(self, options = NULL) {
         patches <- lapply(prop(self$plot, "plots"), function(p) {
             out <- patch(p)
@@ -355,8 +356,6 @@ PatchAlignpatches <- ggproto(
         if (!is.unit(panel_heights)) {
             panel_heights <- unit(panel_heights, "null")
         }
-        cols <- field(area, "l")
-        rows <- field(area, "t")
 
         for (i in seq_along(gt_list)) {
             gt_cur <- .subset2(gt_list, i)
@@ -364,10 +363,12 @@ PatchAlignpatches <- ggproto(
             panel_pos <- find_panel(gt_cur)
             if (nrow(panel_pos) == 0L) next
 
-            col <- .subset(cols, i)
+            loc <- vec_slice(area, i)
+            col <- field(loc, "l")
             panel_width <- panel_widths[col]
             can_set_width <- is.na(as.numeric(panel_width))
-            if (can_set_width || is_absolute_unit(panel_width)) {
+            if (col == field(loc, "r") &&
+                (can_set_width || is_absolute_unit(panel_width))) {
                 gt_panel_widths <- .subset2(gt_cur, "widths")[
                     .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
                 ]
@@ -380,11 +381,11 @@ PatchAlignpatches <- ggproto(
                     panel_widths[col] <- convertWidth(panel_width, "mm")
                 }
             }
-
-            row <- .subset(rows, i)
+            row <- field(loc, "t")
             panel_height <- panel_heights[row]
             can_set_height <- is.na(as.numeric(panel_height))
-            if (can_set_height || is_absolute_unit(panel_height)) {
+            if (row == field(loc, "b") &&
+                (can_set_height || is_absolute_unit(panel_height))) {
                 gt_panel_heights <- .subset2(gt_cur, "heights")[
                     .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
                 ]
@@ -417,10 +418,10 @@ PatchAlignpatches <- ggproto(
     #' @importFrom grid unit
     #' @importFrom ggplot2 wrap_dims calc_element zeroGrob theme_get
     #' @importFrom S7 prop prop<-
-    #' @importFrom rlang arg_match0 is_empty
+    #' @importFrom rlang is_empty
     gtable = function(self) {
         if (is.null(theme <- self$get_option("theme"))) {
-            cli_abort("Run `$setup()` to initialize the patches first.")
+            cli_abort("Initialization required. Please run `$setup()` first.")
         }
 
         # if no plots, we do nothing --------------------------
@@ -429,13 +430,13 @@ PatchAlignpatches <- ggproto(
             return(make_patch_table())
         }
 
-        # prepare the output ---------------------------------
+        # prepare the output ----------------------------------
         gt <- gtable(
             unit(rep(0L, TABLE_COLS * .subset2(metadata, "dims")[2L]), "null"),
             unit(rep(0L, TABLE_ROWS * .subset2(metadata, "dims")[1L]), "null")
         )
 
-        # setup gtable list ----------------------------------
+        # setup tag -------------------------------------------
         for (i in seq_along(.subset2(metadata, "patches"))) {
             # If the plot uses a tag (a string), set it here: `$tag()`
             # modifies the gtable's size, so it must be executed before
@@ -543,17 +544,17 @@ PatchAlignpatches <- ggproto(
     #' @importFrom grid is.unit unit
     set_sizes = function(self, patches, gt_list, area, dims,
                          panel_widths, panel_heights, gt) {
-        cols <- field(area, "l")
-        rows <- field(area, "t")
-
-        # For gtable with fixed aspect ratio ------------------
-        need_respect <- cols == field(area, "r") &
-            rows == field(area, "b") &
+        # resolve the panel sizes -----------------------------
+        # For gtable with fixed aspect ratio
+        need_respect <- field(area, "l") == field(area, "r") &
+            field(area, "t") == field(area, "b") &
             vapply(gt_list, is_respect, logical(1L), USE.NAMES = FALSE)
 
         # here we respect the aspect ratio when necessary -----
         # if the width or height is NA, we will guess the panel widths or
         # heights based on the fixed aspect ratio
+        cols <- field(area, "l")
+        rows <- field(area, "t")
         guess_widths <- which(is.na(as.numeric(panel_widths)))
         guess_heights <- which(is.na(as.numeric(panel_heights)))
         patch_index <- order(
@@ -569,28 +570,31 @@ PatchAlignpatches <- ggproto(
             c(table(cols[need_respect]))[as.character(cols)],
             decreasing = TRUE
         )
-        sizes_list <- respect_dims <- vector("list", length(patches))
+        respect_dims <- vector("list", length(patches))
         for (i in patch_index) {
-            row <- .subset(rows, i)
-            col <- .subset(cols, i)
-            patch <- .subset2(patches, i)
-            panel_aligned <- patch$align_panel(
-                gt = .subset2(gt_list, i),
-                panel_width = panel_widths[col],
-                panel_height = panel_heights[row]
-            )
-            panel_widths[col] <- .subset2(panel_aligned, "width")
-            panel_heights[row] <- .subset2(panel_aligned, "height")
-            if (isTRUE(.subset2(panel_aligned, "respect"))) {
-                respect_dims[[i]] <- matrix(
-                    c(
-                        (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
-                        (col - 1L) * TABLE_COLS + LEFT_BORDER + 1L
-                    ),
-                    nrow = 1L
+            loc <- vec_slice(area, i)
+            col <- field(loc, "l")
+            row <- field(loc, "t")
+            if (col == field(loc, "r") && row == field(loc, "b")) {
+                patch <- .subset2(patches, i)
+                cur_gt <- .subset2(gt_list, i)
+                respected_panel <- patch$respect_panel(
+                    gt = cur_gt,
+                    panel_width = panel_widths[col],
+                    panel_height = panel_heights[row]
                 )
+                panel_widths[col] <- .subset2(respected_panel, "width")
+                panel_heights[row] <- .subset2(respected_panel, "height")
+                if (isTRUE(.subset2(respected_panel, "respect"))) {
+                    respect_dims[[i]] <- matrix(
+                        c(
+                            (row - 1L) * TABLE_ROWS + TOP_BORDER + 1L,
+                            (col - 1L) * TABLE_COLS + LEFT_BORDER + 1L
+                        ),
+                        nrow = 1L
+                    )
+                }
             }
-            sizes_list[i] <- list(patch$border_sizes(.subset2(gt_list, i)))
         }
         if (!is.null(respect_dims <- inject(rbind(!!!respect_dims)))) {
             respect <- matrix(
@@ -610,12 +614,21 @@ PatchAlignpatches <- ggproto(
         }
 
         # setup sizes for non-panel rows/columns --------------
+        sizes_list <- offsets_list <- vector("list", length(patches))
+        for (i in seq_along(gt_list)) {
+            row <- .subset(rows, i)
+            col <- .subset(cols, i)
+            patch <- .subset2(patches, i)
+            cur_gt <- .subset2(gt_list, i)
+            sizes_list[i] <- list(patch$border_sizes(cur_gt))
+        }
         sizes <- table_sizes(
             widths = .subset2(gt, "widths"),
             heights = .subset2(gt, "heights"),
             sizes_list, panel_widths, panel_heights,
             area, dims[2L], dims[1L]
         )
+
         # setup the widths and heights ------------------------
         gt$widths <- .subset2(sizes, "widths")
         gt$heights <- .subset2(sizes, "heights")

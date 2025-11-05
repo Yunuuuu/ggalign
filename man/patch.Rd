@@ -141,7 +141,7 @@ The modified \code{gtable} with the tag added. If the \code{gtable} is not
 standardized (i.e., it doesn't meet the row/column requirements), the
 function returns the original \code{gtable} without modification.}
 
-\item{\code{align_panel}}{\strong{Description}
+\item{\code{respect_panel}}{\strong{Description}
 
 (Optional method) In most cases, panel sizes do not need to be manually
 adjusted when aligning panels, as long as their border sizes are
@@ -166,8 +166,8 @@ computed from the gtable (\code{gt}).
 \strong{Value}
 A list with components:
 \itemize{
-\item \code{width}: Final panel width as a unit object
-\item \code{height}: Final panel height as a unit object
+\item \code{width}: The panel width as a unit object
+\item \code{height}: The panel height as a unit object
 \item \code{respect}: If \code{TRUE}, the aspect ratio was enforced
 }}
 

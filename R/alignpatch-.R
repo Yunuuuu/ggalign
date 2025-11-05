@@ -400,7 +400,7 @@ Patch <- ggproto(
         table_add_tag(gt, label, self$get_option("theme"), t, l, b, r, z)
     },
 
-    #' @field align_panel
+    #' @field respect_panel
     #' **Description**
     #'
     #' (Optional method) In most cases, panel sizes do not need to be manually
@@ -423,13 +423,13 @@ Patch <- ggproto(
     #'
     #' **Value**
     #' A list with components:
-    #' - `width`: Final panel width as a unit object
-    #' - `height`: Final panel height as a unit object
+    #' - `width`: The panel width as a unit object
+    #' - `height`: The panel height as a unit object
     #' - `respect`: If `TRUE`, the aspect ratio was enforced
     #'
     #' @importFrom ggplot2 find_panel
     #' @importFrom gtable is.gtable
-    align_panel = function(self, gt, panel_width, panel_height) {
+    respect_panel = function(self, gt, panel_width, panel_height) {
         # By default we only consider gtable has panel area
         if (!is.gtable(gt)) {
             return(list(width = panel_width, height = panel_height))
@@ -437,21 +437,22 @@ Patch <- ggproto(
 
         # Locate the panel within the gtable
         panel_pos <- find_panel(gt)
-        rows <- c(.subset2(panel_pos, "t"), .subset2(panel_pos, "b"))
-        cols <- c(.subset2(panel_pos, "l"), .subset2(panel_pos, "r"))
+        row <- .subset2(panel_pos, "t")
+        col <- .subset2(panel_pos, "l")
 
         # Determine which dimension(s) can be inferred
         can_set_width <- is.na(as.numeric(panel_width))
         can_set_height <- is.na(as.numeric(panel_height))
 
         # try to maintain aspect ratio if there is a single facet panel
-        if (rows[1L] == rows[2L] && cols[1L] == cols[2L]) {
+        if (row == .subset2(panel_pos, "b") &&
+            col == .subset2(panel_pos, "r")) {
             respect <- is_respect(gt)
             # Continue only if 'respect' is enabled
             if (respect) {
                 # Extract intrinsic panel dimensions from the gtable
-                w <- .subset2(gt, "widths")[cols[1L]]
-                h <- .subset2(gt, "heights")[rows[1L]]
+                w <- .subset2(gt, "widths")[col]
+                h <- .subset2(gt, "heights")[row]
 
                 # Infer dimensions while maintaining aspect ratio
                 if (can_set_width && can_set_height) {
