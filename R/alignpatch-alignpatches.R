@@ -431,8 +431,8 @@ PatchAlignpatches <- ggproto(
 
         # prepare the output ---------------------------------
         gt <- gtable(
-            unit(rep(0L, TABLE_COLS * metadata$dims[2L]), "null"),
-            unit(rep(0L, TABLE_ROWS * metadata$dims[1L]), "null")
+            unit(rep(0L, TABLE_COLS * .subset2(metadata, "dims")[2L]), "null"),
+            unit(rep(0L, TABLE_ROWS * .subset2(metadata, "dims")[1L]), "null")
         )
 
         # setup gtable list ----------------------------------
@@ -472,12 +472,12 @@ PatchAlignpatches <- ggproto(
         panel_pos <- list(
             t = TOP_BORDER + 1L,
             l = LEFT_BORDER + 1L,
-            b = TABLE_ROWS * metadata$dims[1L] - BOTTOM_BORDER,
-            r = TABLE_COLS * metadata$dims[2L] - RIGHT_BORDER
+            b = TABLE_ROWS * .subset2(metadata, "dims")[1L] - BOTTOM_BORDER,
+            r = TABLE_COLS * .subset2(metadata, "dims")[2L] - RIGHT_BORDER
         )
         gt <- self$attach_guide_list(
             gt = gt,
-            guide_list = metadata$guides_list,
+            guide_list = .subset2(metadata, "guides_list"),
             panel_pos = panel_pos,
             theme = theme
         )
@@ -570,8 +570,6 @@ PatchAlignpatches <- ggproto(
             decreasing = TRUE
         )
         sizes_list <- respect_dims <- vector("list", length(patches))
-        # guess_widths <- rep_len(FALSE, dims[2L])
-        # guess_heights <- rep_len(FALSE, dims[1L])
         for (i in patch_index) {
             row <- .subset(rows, i)
             col <- .subset(cols, i)
@@ -580,8 +578,6 @@ PatchAlignpatches <- ggproto(
                 gt = .subset2(gt_list, i),
                 panel_width = panel_widths[col],
                 panel_height = panel_heights[row]
-                # guess_width = guess_widths[col],
-                # guess_height = guess_heights[row]
             )
             panel_widths[col] <- .subset2(panel_aligned, "width")
             panel_heights[row] <- .subset2(panel_aligned, "height")
@@ -594,12 +590,6 @@ PatchAlignpatches <- ggproto(
                     nrow = 1L
                 )
             }
-            # guess_widths[col] <- isTRUE(
-            #     .subset2(panel_aligned, "guess_width")
-            # )
-            # guess_heights[row] <- isTRUE(
-            #     .subset2(panel_aligned, "guess_height")
-            # )
             sizes_list[i] <- list(patch$border_sizes(.subset2(gt_list, i)))
         }
         if (!is.null(respect_dims <- inject(rbind(!!!respect_dims)))) {
