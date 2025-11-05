@@ -650,7 +650,7 @@ Patch <- ggproto(
     #' Checks whether the object inherits from the [alignpatches()] `Patch`
     #' representation.
     #'
-    #' If `TRUE`, the `self$data` will include `patches`, `gt_list`,
+    #' If `TRUE`, the `self$alignpatches` will include `patches`, `gt_list`,
     #' and `borders_list`. For an example of how these are used, refer to the
     #' `patch.ggalign_free_lab` function in the `alignpatch-free-lab.R` script.
     #'

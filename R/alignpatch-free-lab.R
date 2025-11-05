@@ -55,14 +55,14 @@ patch.ggalign_free_lab <- function(x) {
         "PatchFreeLab", Parent,
         align_border = function(self, gt, t, l, b, r) {
             if (self$is_alignpatches()) {
-                self$data$gt_list <- .mapply(
+                self$alignpatches$gt_list <- .mapply(
                     function(gt, borders) {
                         if (is.null(borders)) return(gt) # styler: off
                         self$free_lab(gt, intersect(borders, labs))
                     },
                     list(
-                        gt = .subset2(self$data, "gt_list"),
-                        borders = .subset2(self$data, "borders_list")
+                        gt = .subset2(self$alignpatches, "gt_list"),
+                        borders = .subset2(self$alignpatches, "borders_list")
                     ),
                     NULL
                 )

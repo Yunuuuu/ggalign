@@ -163,10 +163,10 @@ TAGS_Z <- 5L
 PatchAlignpatches <- ggproto(
     "PatchAlignpatches", Patch,
 
-    # @field data
+    # @field alignpatches
     #
     # A list containing metadata used to align the plot.
-    data = NULL,
+    alignpatches = NULL,
     setup = function(self, options = NULL) {
         patches <- lapply(prop(self$plot, "plots"), function(p) {
             out <- patch(p)
@@ -212,14 +212,6 @@ PatchAlignpatches <- ggproto(
         area <- vec_slice(area, keep)
 
         #######################################################
-        metadata <- list(
-            area = area,
-            dims = dims,
-            panel_widths = panel_widths,
-            panel_heights = panel_heights,
-            patches = patches
-        )
-
         # prepare the final options ---------------------------
         options <- options %||% patch_options()
         # we define the guides --------------------------------
@@ -237,10 +229,10 @@ PatchAlignpatches <- ggproto(
         if (is.null(theme <- prop(options, "theme"))) {
             # by default, we use ggplot2 default theme
             theme <- prop(self$plot, "theme")
-            metadata$top_level <- TRUE
+            top_level <- TRUE
         } else {
             theme <- theme + prop(self$plot, "theme")
-            metadata$top_level <- FALSE
+            top_level <- FALSE
         }
         prop(options, "theme", check = FALSE) <- complete_theme(theme)
 
@@ -289,7 +281,6 @@ PatchAlignpatches <- ggproto(
                 }
             ))
         }
-        metadata$borders_list <- borders_list
 
         #######################################################
         # setup gtable list ----------------------------------
@@ -338,23 +329,88 @@ PatchAlignpatches <- ggproto(
             gt_list[i] <- list(patch_gt)
             guides_list[i] <- list(.subset2(components, "guides"))
         }
-        metadata$gt_list <- gt_list
 
         # Separate guide legends between those to be collected by the parent
         # `alignpatches()` and those that remain attached to this subplot.
         guides_list <- gather_guides(guides_list)
         if (is.null(collected)) {
-            metadata$collected_guides <- list()
-            metadata$guides_list <- guides_list
+            collected_guides <- list()
+            guides_list <- guides_list
         } else {
             # Store guides to be collected by the parent `alignpatches()`
-            metadata$collected_guides <- .subset(guides_list, collected)
-            metadata$guides_list <- .subset(
+            collected_guides <- .subset(guides_list, collected)
+            guides_list <- .subset(
                 guides_list,
                 setdiff(names(guides_list), collected)
             )
         }
-        self$data <- metadata
+
+        # For gtable with fixed panel sizes we can directly set the panel sizes
+        # we make sure all plot panels fill well, which means we should use the
+        # largest panel sizes. This matters when the panel sizes are all
+        # absolute unit sizes.
+        panel_widths <- rep(panel_widths, length.out = dims[2L])
+        panel_heights <- rep(panel_heights, length.out = dims[1L])
+        if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
+        if (!is.unit(panel_heights)) {
+            panel_heights <- unit(panel_heights, "null")
+        }
+        cols <- field(area, "l")
+        rows <- field(area, "t")
+
+        for (i in seq_along(gt_list)) {
+            gt_cur <- .subset2(gt_list, i)
+            if (!is.gtable(gt_cur)) next
+            panel_pos <- find_panel(gt_cur)
+            if (nrow(panel_pos) == 0L) next
+
+            col <- .subset(cols, i)
+            panel_width <- panel_widths[col]
+            can_set_width <- is.na(as.numeric(panel_width))
+            if (can_set_width || is_absolute_unit(panel_width)) {
+                gt_panel_widths <- .subset2(gt_cur, "widths")[
+                    .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
+                ]
+                if (all(is_absolute_unit(gt_panel_widths))) {
+                    if (can_set_width) {
+                        panel_width <- sum(gt_panel_widths)
+                    } else {
+                        panel_width <- max(panel_width, sum(gt_panel_widths))
+                    }
+                    panel_widths[col] <- convertWidth(panel_width, "mm")
+                }
+            }
+
+            row <- .subset(rows, i)
+            panel_height <- panel_heights[row]
+            can_set_height <- is.na(as.numeric(panel_height))
+            if (can_set_height || is_absolute_unit(panel_height)) {
+                gt_panel_heights <- .subset2(gt_cur, "heights")[
+                    .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
+                ]
+                if (all(is_absolute_unit(gt_panel_heights))) {
+                    if (can_set_height) {
+                        panel_height <- sum(gt_panel_heights)
+                    } else {
+                        panel_height <- max(panel_height, sum(gt_panel_heights))
+                    }
+                    panel_heights[row] <- convertHeight(panel_height, "mm")
+                }
+            }
+        }
+
+        self$alignpatches <- list(
+            top_level = top_level,
+            patches = patches,
+            gt_list = gt_list,
+            collected_guides = collected_guides,
+            guides_list = guides_list,
+            borders_list = borders_list,
+            area = area,
+            dims = dims,
+            panel_widths = panel_widths,
+            panel_heights = panel_heights
+        )
     },
 
     #' @importFrom gtable gtable gtable_add_grob
@@ -368,7 +424,7 @@ PatchAlignpatches <- ggproto(
         }
 
         # if no plots, we do nothing --------------------------
-        metadata <- self$data
+        metadata <- self$alignpatches
         if (is_empty(.subset2(metadata, "patches"))) {
             return(make_patch_table())
         }
@@ -449,7 +505,7 @@ PatchAlignpatches <- ggproto(
         )
 
         # we only make the final grobs after sizes has been solved
-        if (metadata$top_level) {
+        if (.subset2(metadata, "top_level")) {
             # we'll add background in ggalign_gtable() method
             self$set_grobs(
                 .subset2(metadata, "patches"),
@@ -470,12 +526,12 @@ PatchAlignpatches <- ggproto(
         }
     },
     decompose_guides = function(self, gt) {
-        list(gt = gt, guides = .subset2(self$data, "collected_guides"))
+        list(gt = gt, guides = .subset2(self$alignpatches, "collected_guides"))
     },
     align_border = function(self, gt, t, l, b, r) {
         # we only make the final grobs after sizes has been solved
         gt <- ggproto_parent(Patch, self)$align_border(gt, t, l, b, r)
-        metadata <- self$data
+        metadata <- self$alignpatches
         self$set_grobs(
             .subset2(metadata, "patches"),
             .subset2(metadata, "gt_list"),
@@ -487,63 +543,12 @@ PatchAlignpatches <- ggproto(
     #' @importFrom grid is.unit unit
     set_sizes = function(self, patches, gt_list, area, dims,
                          panel_widths, panel_heights, gt) {
-        panel_widths <- rep(panel_widths, length.out = dims[2L])
-        panel_heights <- rep(panel_heights, length.out = dims[1L])
-        if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
-        if (!is.unit(panel_heights)) {
-            panel_heights <- unit(panel_heights, "null")
-        }
         cols <- field(area, "l")
         rows <- field(area, "t")
 
-        # For gtable with fixed panel sizes ------------------
-        # we must ensure all plot panels fill well, which means we should use
-        # the largest panel sizes. This matters when the panel sizes are all
-        # absolute unit sizes.
-        for (i in seq_along(gt_list)) {
-            gt_cur <- .subset2(gt_list, i)
-            if (!is.gtable(gt_cur)) next
-            panel_pos <- find_panel(gt_cur)
-            if (nrow(panel_pos) == 0L) next
-
-            col <- .subset(cols, i)
-            panel_width <- panel_widths[col]
-            can_set_width <- is.na(as.numeric(panel_width))
-            if (can_set_width || is_absolute_unit(panel_width)) {
-                gt_panel_widths <- .subset2(gt_cur, "widths")[
-                    .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
-                ]
-                if (all(is_absolute_unit(gt_panel_widths))) {
-                    if (can_set_width) {
-                        panel_width <- sum(gt_panel_widths)
-                    } else {
-                        panel_width <- max(panel_width, sum(gt_panel_widths))
-                    }
-                    panel_widths[col] <- convertWidth(panel_width, "mm")
-                }
-            }
-
-            row <- .subset(rows, i)
-            panel_height <- panel_heights[row]
-            can_set_height <- is.na(as.numeric(panel_height))
-            if (can_set_height || is_absolute_unit(panel_height)) {
-                gt_panel_heights <- .subset2(gt_cur, "heights")[
-                    .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
-                ]
-                if (all(is_absolute_unit(gt_panel_heights))) {
-                    if (can_set_height) {
-                        panel_height <- sum(gt_panel_heights)
-                    } else {
-                        panel_height <- max(panel_height, sum(gt_panel_heights))
-                    }
-                    panel_heights[row] <- convertHeight(panel_height, "mm")
-                }
-            }
-        }
-
         # For gtable with fixed aspect ratio ------------------
-        need_respect <- field(area, "l") == field(area, "r") &
-            field(area, "t") == field(area, "b") &
+        need_respect <- cols == field(area, "r") &
+            rows == field(area, "b") &
             vapply(gt_list, is_respect, logical(1L), USE.NAMES = FALSE)
 
         # here we respect the aspect ratio when necessary -----
@@ -692,10 +697,10 @@ PatchAlignpatches <- ggproto(
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$t,
-                l = panel_pos$l,
-                b = panel_pos$b,
-                r = panel_pos$r,
+                t = .subset2(panel_pos, "t"),
+                l = .subset2(panel_pos, "l"),
+                b = .subset2(panel_pos, "b"),
+                r = .subset2(panel_pos, "r"),
                 ...
             )
             return(gt)
@@ -712,9 +717,9 @@ PatchAlignpatches <- ggproto(
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$t,
-                l = panel_pos$l - 6L,
-                b = panel_pos$b,
+                t = .subset2(panel_pos, "t"),
+                l = .subset2(panel_pos, "l") - 6L,
+                b = .subset2(panel_pos, "b"),
                 ...
             )
             gt$widths[.subset2(panel_pos, "l") - 5:6] <- widths
@@ -729,9 +734,9 @@ PatchAlignpatches <- ggproto(
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$t,
-                l = panel_pos$r + 6L,
-                b = panel_pos$b,
+                t = .subset2(panel_pos, "t"),
+                l = .subset2(panel_pos, "r") + 6L,
+                b = .subset2(panel_pos, "b"),
                 ...
             )
             gt$widths[.subset2(panel_pos, "r") + 5:6] <- widths
@@ -751,9 +756,9 @@ PatchAlignpatches <- ggproto(
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$b + 6L,
-                l = place$l,
-                r = place$r,
+                t = .subset2(panel_pos, "b") + 6L,
+                l = .subset2(place, "l"),
+                r = .subset2(place, "r"),
                 ...
             )
             gt$heights[.subset2(panel_pos, "b") + 5:6] <- heights
@@ -773,9 +778,9 @@ PatchAlignpatches <- ggproto(
             gt <- gtable_add_grob(
                 x = gt,
                 grobs = guide_box,
-                t = panel_pos$t - 6L,
-                l = place$l,
-                r = place$r,
+                t = .subset2(panel_pos, "t") - 6L,
+                l = .subset2(place, "l"),
+                r = .subset2(place, "r"),
                 ...
             )
             gt$heights[.subset2(panel_pos, "t") - 5:6] <- heights

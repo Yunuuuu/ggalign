@@ -266,7 +266,7 @@ Adds the main plot gtable into the target gtable.}
 Checks whether the object inherits from the \code{\link[=alignpatches]{alignpatches()}} \code{Patch}
 representation.
 
-If \code{TRUE}, the \code{self$data} will include \code{patches}, \code{gt_list},
+If \code{TRUE}, the \code{self$alignpatches} will include \code{patches}, \code{gt_list},
 and \code{borders_list}. For an example of how these are used, refer to the
 \code{patch.ggalign_free_lab} function in the \code{alignpatch-free-lab.R} script.
 
