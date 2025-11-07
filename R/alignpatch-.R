@@ -390,14 +390,42 @@ Patch <- ggproto(
         if (!is.gtable(gt)) {
             return(gt)
         }
-        heights <- .subset2(gt, "heights")
-        widths <- .subset2(gt, "widths")
         # Note: When the gtable represents a facetted plot, the number of
         #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
-        if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
+        if (nrow(gt) < TABLE_ROWS || ncol(gt) < TABLE_COLS) {
             return(gt)
         }
         table_add_tag(gt, label, self$get_option("theme"), t, l, b, r, z)
+    },
+    panel_widths = function(self, gt) {
+        if (is.gtable(gt)) {
+            panel_pos <- find_panel(gt)
+            if (nrow(panel_pos) == 0L) {
+                return(NULL)
+            }
+            .subset2(gt, "widths")[
+                .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
+            ]
+        } else if (is.grob(gt)) {
+            grobWidth(gt)
+        } else {
+            NULL
+        }
+    },
+    panel_heights = function(self, gt) {
+        if (is.gtable(gt)) {
+            panel_pos <- find_panel(gt)
+            if (nrow(panel_pos) == 0L) {
+                return(NULL)
+            }
+            .subset2(gt, "heights")[
+                .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
+            ]
+        } else if (is.grob(gt)) {
+            grobHeight(gt)
+        } else {
+            NULL
+        }
     },
 
     #' @field respect_panel
@@ -494,25 +522,36 @@ Patch <- ggproto(
     #' - `right`: `unit` values for the right borders or `NULL`.
     #'
     #' @importFrom gtable is.gtable
+    #' @importFrom ggplot2 find_panel
     border_sizes = function(self, gt) {
         if (!is.gtable(gt)) {
             return(NULL)
         }
-
         heights <- .subset2(gt, "heights")
         widths <- .subset2(gt, "widths")
-        # Only compute border sizes for standardized gtables.
-        # Note: When the gtable represents a facetted plot, the number of
-        #   rows/columns (heights or widths) will exceed TABLE_ROWS/COLS.
-        if (length(heights) < TABLE_ROWS || length(widths) < TABLE_COLS) {
-            return(NULL)
+        panel_pos <- find_panel(gt)
+        if (.subset2(panel_pos, "t") != TOP_BORDER + 1L) {
+            top <- NULL
+        } else {
+            top <- heights[seq_len(TOP_BORDER)]
         }
-        top <- heights[seq_len(TOP_BORDER)]
-        left <- widths[seq_len(LEFT_BORDER)]
-        bottom <- heights[
-            (length(heights) - BOTTOM_BORDER + 1L):length(heights)
-        ]
-        right <- widths[(length(widths) - RIGHT_BORDER + 1L):length(widths)]
+        if (.subset2(panel_pos, "l") != LEFT_BORDER + 1L) {
+            left <- NULL
+        } else {
+            left <- widths[seq_len(LEFT_BORDER)]
+        }
+        if (.subset2(panel_pos, "b") != length(heights) - BOTTOM_BORDER) {
+            bottom <- NULL
+        } else {
+            bottom <- heights[
+                (length(heights) - BOTTOM_BORDER + 1L):length(heights)
+            ]
+        }
+        if (.subset2(panel_pos, "r") != length(widths) - RIGHT_BORDER) {
+            right <- NULL
+        } else {
+            right <- widths[(length(widths) - RIGHT_BORDER + 1L):length(widths)]
+        }
         list(top = top, left = left, bottom = bottom, right = right)
     },
 

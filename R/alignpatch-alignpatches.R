@@ -307,9 +307,7 @@ PatchAlignpatches <- ggproto(
 
             components <- patch$decompose_guides(patch$gtable())
             patch_gt <- .subset2(components, "gt")
-            # If the plot uses a tag (a string), set it here: `$tag()`
-            # modifies the gtable's size, so it must be executed before
-            # `$set_sizes()`
+            # If the plot uses a tag (a string), set it here
             if (is_string(tag <- patch$get_option("tag"))) {
                 theme <- patch$get_option("theme")
                 tag_placement <- calc_element("plot.tag.placement", theme) %||%
@@ -344,60 +342,6 @@ PatchAlignpatches <- ggproto(
                 guides_list,
                 setdiff(names(guides_list), collected)
             )
-        }
-
-        # For gtable with fixed panel sizes we can directly set the panel sizes
-        # we make sure all plot panels fill well, which means we should use the
-        # largest panel sizes. This matters when the panel sizes are all
-        # absolute unit sizes.
-        panel_widths <- rep(panel_widths, length.out = dims[2L])
-        panel_heights <- rep(panel_heights, length.out = dims[1L])
-        if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
-        if (!is.unit(panel_heights)) {
-            panel_heights <- unit(panel_heights, "null")
-        }
-
-        for (i in seq_along(gt_list)) {
-            gt_cur <- .subset2(gt_list, i)
-            if (!is.gtable(gt_cur)) next
-            panel_pos <- find_panel(gt_cur)
-            if (nrow(panel_pos) == 0L) next
-
-            loc <- vec_slice(area, i)
-            col <- field(loc, "l")
-            panel_width <- panel_widths[col]
-            can_set_width <- is.na(as.numeric(panel_width))
-            if (col == field(loc, "r") &&
-                (can_set_width || is_absolute_unit(panel_width))) {
-                gt_panel_widths <- .subset2(gt_cur, "widths")[
-                    .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
-                ]
-                if (all(is_absolute_unit(gt_panel_widths))) {
-                    if (can_set_width) {
-                        panel_width <- sum(gt_panel_widths)
-                    } else {
-                        panel_width <- max(panel_width, sum(gt_panel_widths))
-                    }
-                    panel_widths[col] <- convertWidth(panel_width, "mm")
-                }
-            }
-            row <- field(loc, "t")
-            panel_height <- panel_heights[row]
-            can_set_height <- is.na(as.numeric(panel_height))
-            if (row == field(loc, "b") &&
-                (can_set_height || is_absolute_unit(panel_height))) {
-                gt_panel_heights <- .subset2(gt_cur, "heights")[
-                    .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
-                ]
-                if (all(is_absolute_unit(gt_panel_heights))) {
-                    if (can_set_height) {
-                        panel_height <- sum(gt_panel_heights)
-                    } else {
-                        panel_height <- max(panel_height, sum(gt_panel_heights))
-                    }
-                    panel_heights[row] <- convertHeight(panel_height, "mm")
-                }
-            }
         }
 
         self$alignpatches <- list(
@@ -438,12 +382,10 @@ PatchAlignpatches <- ggproto(
 
         # setup tag -------------------------------------------
         for (i in seq_along(.subset2(metadata, "patches"))) {
-            # If the plot uses a tag (a string), set it here: `$tag()`
-            # modifies the gtable's size, so it must be executed before
-            # `$set_sizes()`
+            # If the canvas uses a tag (a string), set it here
             patch <- .subset2(.subset2(metadata, "patches"), i)
-            if (is_string(tag <- prop(patch$options, "tag"))) {
-                patch_theme <- prop(patch$options, "theme")
+            if (is_string(tag <- patch$get_option("tag"))) {
+                patch_theme <- patch$get_option("theme")
                 tag_placement <- calc_element(
                     "plot.tag.placement", patch_theme
                 ) %||% "plot"
@@ -545,12 +487,67 @@ PatchAlignpatches <- ggproto(
     set_sizes = function(self, patches, gt_list, area, dims,
                          panel_widths, panel_heights, gt) {
         # resolve the panel sizes -----------------------------
+        # For gtable with fixed panel sizes we can directly set the panel sizes
+        # we make sure all plot panels fill well, which means we should use the
+        # largest panel sizes. This matters when the panel sizes are all
+        # absolute unit sizes.
+        panel_widths <- rep(panel_widths, length.out = dims[2L])
+        panel_heights <- rep(panel_heights, length.out = dims[1L])
+        if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
+        if (!is.unit(panel_heights)) {
+            panel_heights <- unit(panel_heights, "null")
+        }
+
+        for (i in seq_along(gt_list)) {
+            gt_cur <- .subset2(gt_list, i)
+            panel_widths_cur <- self$panel_widths(gt_cur)
+            panel_heights_cur <- self$panel_heights(gt_cur)
+            loc <- vec_slice(area, i)
+
+            # set pnael width
+            if (is.unit(panel_widths_cur) &&
+                all(is_absolute_unit(panel_widths_cur))) {
+                col <- field(loc, "l")
+                panel_width <- panel_widths[col]
+                can_set_width <- is.na(as.numeric(panel_width))
+                if (col == field(loc, "r") &&
+                    (can_set_width || is_absolute_unit(panel_width))) {
+                    if (can_set_width) {
+                        panel_width <- sum(panel_widths_cur)
+                    } else {
+                        panel_width <- max(panel_width, sum(panel_widths_cur))
+                    }
+                    panel_widths[col] <- convertWidth(panel_width, "mm")
+                }
+            }
+
+            # set pnael heigth
+            if (is.unit(panel_heights_cur) &&
+                all(is_absolute_unit(panel_heights_cur))) {
+                row <- field(loc, "t")
+                panel_height <- panel_heights[row]
+                can_set_height <- is.na(as.numeric(panel_height))
+                if (row == field(loc, "b") &&
+                    (can_set_height || is_absolute_unit(panel_height))) {
+                    if (can_set_height) {
+                        panel_height <- sum(panel_heights_cur)
+                    } else {
+                        panel_height <- max(
+                            panel_height,
+                            sum(panel_heights_cur)
+                        )
+                    }
+                    panel_heights[row] <- convertHeight(panel_height, "mm")
+                }
+            }
+        }
+
         # For gtable with fixed aspect ratio
+        # here we respect the aspect ratio when necessary
         need_respect <- field(area, "l") == field(area, "r") &
             field(area, "t") == field(area, "b") &
             vapply(gt_list, is_respect, logical(1L), USE.NAMES = FALSE)
 
-        # here we respect the aspect ratio when necessary -----
         # if the width or height is NA, we will guess the panel widths or
         # heights based on the fixed aspect ratio
         cols <- field(area, "l")
@@ -577,9 +574,9 @@ PatchAlignpatches <- ggproto(
             row <- field(loc, "t")
             if (col == field(loc, "r") && row == field(loc, "b")) {
                 patch <- .subset2(patches, i)
-                cur_gt <- .subset2(gt_list, i)
+                gt_cur <- .subset2(gt_list, i)
                 respected_panel <- patch$respect_panel(
-                    gt = cur_gt,
+                    gt = gt_cur,
                     panel_width = panel_widths[col],
                     panel_height = panel_heights[row]
                 )
@@ -613,14 +610,14 @@ PatchAlignpatches <- ggproto(
             panel_heights[guess_heights] <- unit(1L, "null")
         }
 
-        # setup sizes for non-panel rows/columns --------------
-        sizes_list <- offsets_list <- vector("list", length(patches))
+        # resolve sizes for non-panel rows/columns --------------
+        sizes_list <- vector("list", length(patches))
         for (i in seq_along(gt_list)) {
-            row <- .subset(rows, i)
-            col <- .subset(cols, i)
+            # row <- .subset(rows, i)
+            # col <- .subset(cols, i)
             patch <- .subset2(patches, i)
-            cur_gt <- .subset2(gt_list, i)
-            sizes_list[i] <- list(patch$border_sizes(cur_gt))
+            gt_cur <- .subset2(gt_list, i)
+            sizes_list[i] <- list(patch$border_sizes(gt_cur))
         }
         sizes <- table_sizes(
             widths = .subset2(gt, "widths"),
