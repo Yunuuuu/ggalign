@@ -131,6 +131,7 @@ reference:
   - layout_theme
   - layout_tags
   - patch
+  - Patch-ggproto
   - as_grob
 
 - title: Extending ggalign

@@ -121,12 +121,12 @@ make_patch_table <- function() {
 #' object provides the interface for aligning the subplot, managing panel sizes,
 #' and handling guide legends.
 #'
-#' @param x Any objects has a Patch representation
+#' @param x Any objects has a [Patch] representation
 #' @return A `r code_quote(sprintf("%s::Patch", pkg_nm()), quote = FALSE)`
 #' object.
 #' @examples
 #' patch(ggplot())
-#' @seealso [`alignpatches()`]/[`align_plots()`]
+#' @seealso [`Patch`]
 #' @export
 #' @keywords internal
 patch <- function(x) UseMethod("patch")
@@ -180,18 +180,19 @@ patch_options <- S7::new_class("patch_options",
 #'
 #' @usage NULL
 #' @format NULL
-#'
-#' @details
-#' In `alignpatches()`, each subplot is regarded as a `patch`, and **a
-#' corresponding `Patch` object is required** for proper alignment and layout
-#' operations. `Patch` is a [`ggproto()`][ggplot2::ggproto] object that provides
-#' the core methods for arranging and aligning the plots.
+#' @details NULL
+#' @description
+#' In `alignpatches()`, each subplot require a `Patch` object for proper
+#' alignment and layout operations. `Patch` object is a
+#' [`ggproto()`][ggplot2::ggproto] object that provides the core methods for
+#' arranging and aligning the plots.
 #'
 #' @importFrom ggplot2 ggproto find_panel
-#' @importFrom grid unit unit.c
+#' @importFrom grid unit unit.c grobWidth grobHeight
 #' @importFrom gtable is.gtable
+#' @importFrom rlang list2
 #' @export
-#' @rdname patch
+#' @name Patch-ggproto
 Patch <- ggproto(
     "ggalign::Patch", NULL,
 
@@ -397,35 +398,92 @@ Patch <- ggproto(
         }
         table_add_tag(gt, label, self$get_option("theme"), t, l, b, r, z)
     },
-    panel_widths = function(self, gt) {
+    #' @field panel_sizes
+    #' **Description**
+    #'
+    #' This method retrieves the panel sizes (widths and heights) of a `gtable`
+    #' or `grob` object.
+    #'
+    #' **Arguments**
+    #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by
+    #'   `self$decompose_guides()`.
+    #'
+    #' **Value**
+    #' A list with components:
+    #' - `widths`: The panel widths as a unit object
+    #' - `heights`: The panel heights as a unit object
+    #'
+    #' @importFrom grid grobHeight grobWidth
+    #' @importFrom gtable is.gtable
+    #' @importFrom ggplot2 find_panel
+    panel_sizes = function(self, gt) {
         if (is.gtable(gt)) {
             panel_pos <- find_panel(gt)
             if (nrow(panel_pos) == 0L) {
                 return(NULL)
             }
-            .subset2(gt, "widths")[
-                .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
-            ]
+            list(
+                widths = .subset2(gt, "widths")[
+                    .subset2(panel_pos, "l"):.subset2(panel_pos, "r")
+                ],
+                heights = .subset2(gt, "heights")[
+                    .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
+                ]
+            )
         } else if (is.grob(gt)) {
-            grobWidth(gt)
+            list(widths = grobWidth(gt), heights = grobHeight(gt))
         } else {
             NULL
         }
     },
-    panel_heights = function(self, gt) {
-        if (is.gtable(gt)) {
-            panel_pos <- find_panel(gt)
-            if (nrow(panel_pos) == 0L) {
-                return(NULL)
+
+    #' @field adjust_panel_width/adjust_panel_height
+    #' **Description**
+    #'
+    #' (Optional method) In most cases, the panel sizes do not need to be
+    #' manually adjusted when aligning, as long as their border sizes are
+    #' consistent. However, for [`gtable`][gtable::gtable] objects with absolute
+    #' panel sizes, the panel sizes must be directly set to ensure that all plot
+    #' panels fill evenly. This is particularly important when the panel sizes
+    #' are specified in absolute units. The method is only called when the plot
+    #' does not span across multiple areas.
+    #'
+    #' **Arguments**
+    #' - `panel_widths`/`panel_heights`: Unit objects representing the panel
+    #'   widths or heights of the underlying [`gtable`][gtable::gtable] object.
+    #'   These values correspond to the `widths`/`heights` fields returned by
+    #'   the `$panel_sizes()` method.
+    #' - `panel_width`/`panel_height`: Unit objects representing the desired
+    #'   panel size. If the internal numeric value is `NA`, the size will be
+    #'   computed based on `panel_widths`/`panel_heights`.
+    #'
+    #' **Value**
+    #' The panel width/height as a unit object
+    #'
+    #' @importFrom grid is.unit
+    adjust_panel_width = function(self, panel_widths, panel_width) {
+        if (is.unit(panel_widths) && all(is_absolute_unit(panel_widths))) {
+            if (is.na(as.numeric(panel_width))) {
+                panel_width <- sum(panel_widths)
+                panel_width <- convertWidth(panel_width, "mm")
+            } else if (is_absolute_unit(panel_width)) {
+                panel_width <- max(panel_width, sum(panel_widths))
+                panel_width <- convertWidth(panel_width, "mm")
             }
-            .subset2(gt, "heights")[
-                .subset2(panel_pos, "t"):.subset2(panel_pos, "b")
-            ]
-        } else if (is.grob(gt)) {
-            grobHeight(gt)
-        } else {
-            NULL
         }
+        panel_width
+    },
+    adjust_panel_height = function(self, panel_heights, panel_height) {
+        if (is.unit(panel_heights) && all(is_absolute_unit(panel_heights))) {
+            if (is.na(as.numeric(panel_height))) {
+                panel_height <- sum(panel_heights)
+                panel_height <- convertHeight(panel_height, "mm")
+            } else if (is_absolute_unit(panel_height)) {
+                panel_height <- max(panel_height, sum(panel_heights))
+                panel_height <- convertHeight(panel_height, "mm")
+            }
+        }
+        panel_height
     },
 
     #' @field respect_panel
@@ -433,14 +491,11 @@ Patch <- ggproto(
     #'
     #' (Optional method) In most cases, panel sizes do not need to be manually
     #' adjusted when aligning panels, as long as their border sizes are
-    #' consistent. However, for gtables with a fixed aspect ratio, this method
-    #' adjusts the panel width and height based on user input and the dimensions
-    #' of the underlying gtable (`gt`) to ensure proper alignment.
-    #'
-    #' When the internal *numeric value* of either `panel_width` or
-    #' `panel_height` is `NA` (i.e., `is.na(as.numeric(...))`), that dimension
-    #' is inferred from the gtable while maintaining the aspect ratio for
-    #' single-panel layouts when `respect = TRUE`.
+    #' consistent. However, for `gtables` with a fixed panel aspect ratio, if
+    #' the internal *numeric value* of the input panel sizes (either
+    #' `panel_width` or `panel_height` is `NA`), that dimension will be inferred
+    #' while maintaining the aspect ratio, particularly for single-panel
+    #' layouts.
     #'
     #' **Arguments**
     #' - `gt`: A [`gtable`][gtable::gtable] object, usually returned by

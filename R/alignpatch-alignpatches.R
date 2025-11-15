@@ -438,7 +438,7 @@ PatchAlignpatches <- ggproto(
         gt <- gtable_add_grob(
             gt,
             # foreground
-            list(element_render(theme, "panel.border", fill = NA)),
+            element_render(theme, "panel.border", fill = NA),
             t = .subset2(panel_pos, "t"),
             l = .subset2(panel_pos, "l"),
             b = .subset2(panel_pos, "b"),
@@ -487,10 +487,6 @@ PatchAlignpatches <- ggproto(
     set_sizes = function(self, patches, gt_list, area, dims,
                          panel_widths, panel_heights, gt) {
         # resolve the panel sizes -----------------------------
-        # For gtable with fixed panel sizes we can directly set the panel sizes
-        # we make sure all plot panels fill well, which means we should use the
-        # largest panel sizes. This matters when the panel sizes are all
-        # absolute unit sizes.
         panel_widths <- rep(panel_widths, length.out = dims[2L])
         panel_heights <- rep(panel_heights, length.out = dims[1L])
         if (!is.unit(panel_widths)) panel_widths <- unit(panel_widths, "null")
@@ -498,47 +494,31 @@ PatchAlignpatches <- ggproto(
             panel_heights <- unit(panel_heights, "null")
         }
 
+        # For gtable with absolute panel sizes we can directly set the panel
+        # sizes we make sure all plot panels fill well, which means we should
+        # use the largest panel sizes. This matters when the panel sizes are all
+        # absolute unit sizes.
         for (i in seq_along(gt_list)) {
-            gt_cur <- .subset2(gt_list, i)
-            panel_widths_cur <- self$panel_widths(gt_cur)
-            panel_heights_cur <- self$panel_heights(gt_cur)
+            patch <- .subset2(patches, i)
+            panel_sizes <- patch$panel_sizes(.subset2(gt_list, i)) %||%
+                list(widths = NULL, heights = NULL)
             loc <- vec_slice(area, i)
-
             # set pnael width
-            if (is.unit(panel_widths_cur) &&
-                all(is_absolute_unit(panel_widths_cur))) {
-                col <- field(loc, "l")
-                panel_width <- panel_widths[col]
-                can_set_width <- is.na(as.numeric(panel_width))
-                if (col == field(loc, "r") &&
-                    (can_set_width || is_absolute_unit(panel_width))) {
-                    if (can_set_width) {
-                        panel_width <- sum(panel_widths_cur)
-                    } else {
-                        panel_width <- max(panel_width, sum(panel_widths_cur))
-                    }
-                    panel_widths[col] <- convertWidth(panel_width, "mm")
-                }
+            col <- field(loc, "l")
+            if (col == field(loc, "r")) {
+                panel_widths[col] <- patch$adjust_panel_width(
+                    .subset2(panel_sizes, "widths"),
+                    panel_widths[col]
+                )
             }
 
             # set pnael heigth
-            if (is.unit(panel_heights_cur) &&
-                all(is_absolute_unit(panel_heights_cur))) {
-                row <- field(loc, "t")
-                panel_height <- panel_heights[row]
-                can_set_height <- is.na(as.numeric(panel_height))
-                if (row == field(loc, "b") &&
-                    (can_set_height || is_absolute_unit(panel_height))) {
-                    if (can_set_height) {
-                        panel_height <- sum(panel_heights_cur)
-                    } else {
-                        panel_height <- max(
-                            panel_height,
-                            sum(panel_heights_cur)
-                        )
-                    }
-                    panel_heights[row] <- convertHeight(panel_height, "mm")
-                }
+            row <- field(loc, "t")
+            if (row == field(loc, "b")) {
+                panel_heights[row] <- patch$adjust_panel_height(
+                    .subset2(panel_sizes, "heights"),
+                    panel_heights[row]
+                )
             }
         }
 
