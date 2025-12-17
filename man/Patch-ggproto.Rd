@@ -149,9 +149,9 @@ A list with components:
 manually adjusted when aligning, as long as their border sizes are
 consistent. However, for \code{\link[gtable:gtable]{gtable}} objects with absolute
 panel sizes, the panel sizes must be directly set to ensure that all plot
-panels fill evenly. This is particularly important when the panel sizes
-are specified in absolute units. The method is only called when the plot
-does not span across multiple areas.
+panels fill in. This is particularly important when the specified and
+desired panel sizes are in absolute units. The method is only called
+when the plot does not span across multiple areas.
 
 \strong{Arguments}
 \itemize{

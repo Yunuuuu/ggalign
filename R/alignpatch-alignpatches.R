@@ -99,7 +99,7 @@ alignpatches <- S7::new_class(
         plots <- rlang::dots_list(..., .ignore_empty = "all", .named = NULL)
         nms <- names(plots)
         area <- area %||% design
-        if (!is.null(nms) && is.character(area)) { # nocov start
+        if (!is.null(nms) && is.character(area)) {
             area_names <- unique(trimws(.subset2(strsplit(area, ""), 1L)))
             area_names <- sort(vec_set_difference(area_names, c("", "#")))
             if (all(nms %in% area_names)) {
@@ -108,7 +108,7 @@ alignpatches <- S7::new_class(
                 plot_list[nms] <- plots
                 plots <- plot_list
             }
-        } # nocov end
+        }
 
         # setup layout parameters
         layout <- layout_design(
@@ -167,6 +167,7 @@ PatchAlignpatches <- ggproto(
     #
     # A list containing metadata used to align the plot.
     alignpatches = NULL,
+
     #' @importFrom rlang arg_match0
     setup = function(self, options = NULL) {
         patches <- lapply(prop(self$plot, "plots"), function(p) {
@@ -503,7 +504,7 @@ PatchAlignpatches <- ggproto(
             panel_sizes <- patch$panel_sizes(.subset2(gt_list, i)) %||%
                 list(widths = NULL, heights = NULL)
             loc <- vec_slice(area, i)
-            # set pnael width
+            # set pnael width for plot fit in one-column
             col <- field(loc, "l")
             if (col == field(loc, "r")) {
                 panel_widths[col] <- patch$adjust_panel_width(
@@ -512,7 +513,7 @@ PatchAlignpatches <- ggproto(
                 )
             }
 
-            # set pnael heigth
+            # set pnael heigth for plot fit in one-row
             row <- field(loc, "t")
             if (row == field(loc, "b")) {
                 panel_heights[row] <- patch$adjust_panel_height(
@@ -591,18 +592,14 @@ PatchAlignpatches <- ggproto(
         }
 
         # resolve sizes for non-panel rows/columns --------------
-        sizes_list <- vector("list", length(patches))
-        for (i in seq_along(gt_list)) {
-            # row <- .subset(rows, i)
-            # col <- .subset(cols, i)
-            patch <- .subset2(patches, i)
-            gt_cur <- .subset2(gt_list, i)
-            sizes_list[i] <- list(patch$border_sizes(gt_cur))
-        }
         sizes <- table_sizes(
             widths = .subset2(gt, "widths"),
             heights = .subset2(gt, "heights"),
-            sizes_list, panel_widths, panel_heights,
+            border_sizes_list = lapply(seq_along(gt_list), function(i) {
+                patch <- .subset2(patches, i)
+                patch$border_sizes(.subset2(gt_list, i))
+            }),
+            panel_widths, panel_heights,
             area, dims[2L], dims[1L]
         )
 
@@ -640,9 +637,9 @@ PatchAlignpatches <- ggproto(
             )
         }
         # arrange the grobs
-        idx <- order(.subset2(.subset2(gt, "layout"), "z"))
-        gt$layout <- vec_slice(.subset2(gt, "layout"), idx)
-        gt$grobs <- .subset(.subset2(gt, "grobs"), idx)
+        ordering <- order(.subset2(.subset2(gt, "layout"), "z"))
+        gt$layout <- vec_slice(.subset2(gt, "layout"), ordering)
+        gt$grobs <- .subset(.subset2(gt, "grobs"), ordering)
         gt
     },
     attach_guide_list = function(self, gt, guide_list, panel_pos, theme) {
@@ -770,13 +767,13 @@ PatchAlignpatches <- ggproto(
 )
 
 #' @importFrom grid convertHeight convertWidth unit
-table_sizes <- function(widths, heights, sizes_list,
+table_sizes <- function(widths, heights, border_sizes_list,
                         panel_widths, panel_heights,
                         area, ncol, nrow) {
     # `null` unit of the panel area will be converted into 0
     # we'll set the panel width and height afterward
     widths <- convertWidth(widths, "mm", valueOnly = TRUE)
-    subplots_widths <- lapply(sizes_list, function(sizes) {
+    subplots_widths <- lapply(border_sizes_list, function(sizes) {
         if (is.null(sizes)) {
             left <- right <- NULL
         } else {
@@ -817,7 +814,7 @@ table_sizes <- function(widths, heights, sizes_list,
     widths <- pmax(widths, subplots_widths)
 
     heights <- convertHeight(heights, "mm", valueOnly = TRUE)
-    subplots_heights <- lapply(sizes_list, function(sizes) {
+    subplots_heights <- lapply(border_sizes_list, function(sizes) {
         if (is.null(sizes)) {
             top <- bottom <- NULL
         } else {

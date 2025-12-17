@@ -190,7 +190,6 @@ patch_options <- S7::new_class("patch_options",
 #' @importFrom ggplot2 ggproto find_panel
 #' @importFrom grid unit unit.c grobWidth grobHeight
 #' @importFrom gtable is.gtable
-#' @importFrom rlang list2
 #' @export
 #' @name Patch-ggproto
 Patch <- ggproto(
@@ -219,6 +218,7 @@ Patch <- ggproto(
     #'   object. Each argument should be of the form `name = value`, where
     #'   `name` is the option name and `value` is the value to assign to it.
     #'
+    #' @importFrom rlang list2
     set_options = function(self, ...) props(self$options) <- list2(...),
 
     #' @field set_option
@@ -266,6 +266,15 @@ Patch <- ggproto(
         }
         self$options <- options
     },
+    setup_tag = function(self, tag) {
+        if (is_tagger(tagger <- prop(options, "tag"))) {
+            tagger$tag()
+        } else {
+            tagger
+        }
+    },
+    setup_theme = function(self, theme) theme,
+    setup_guides = function(self, guides) guides,
 
     #' @field gtable
     #'
@@ -444,9 +453,9 @@ Patch <- ggproto(
     #' manually adjusted when aligning, as long as their border sizes are
     #' consistent. However, for [`gtable`][gtable::gtable] objects with absolute
     #' panel sizes, the panel sizes must be directly set to ensure that all plot
-    #' panels fill evenly. This is particularly important when the panel sizes
-    #' are specified in absolute units. The method is only called when the plot
-    #' does not span across multiple areas.
+    #' panels fill in. This is particularly important when the specified and
+    #' desired panel sizes are in absolute units. The method is only called
+    #' when the plot does not span across multiple areas.
     #'
     #' **Arguments**
     #' - `panel_widths`/`panel_heights`: Unit objects representing the panel
@@ -464,8 +473,7 @@ Patch <- ggproto(
     adjust_panel_width = function(self, panel_widths, panel_width) {
         if (is.unit(panel_widths) && all(is_absolute_unit(panel_widths))) {
             if (is.na(as.numeric(panel_width))) {
-                panel_width <- sum(panel_widths)
-                panel_width <- convertWidth(panel_width, "mm")
+                panel_width <- convertWidth(sum(panel_widths), "mm")
             } else if (is_absolute_unit(panel_width)) {
                 panel_width <- max(panel_width, sum(panel_widths))
                 panel_width <- convertWidth(panel_width, "mm")
@@ -476,8 +484,7 @@ Patch <- ggproto(
     adjust_panel_height = function(self, panel_heights, panel_height) {
         if (is.unit(panel_heights) && all(is_absolute_unit(panel_heights))) {
             if (is.na(as.numeric(panel_height))) {
-                panel_height <- sum(panel_heights)
-                panel_height <- convertHeight(panel_height, "mm")
+                panel_height <- convertHeight(sum(panel_heights), "mm")
             } else if (is_absolute_unit(panel_height)) {
                 panel_height <- max(panel_height, sum(panel_heights))
                 panel_height <- convertHeight(panel_height, "mm")
@@ -523,16 +530,16 @@ Patch <- ggproto(
         row <- .subset2(panel_pos, "t")
         col <- .subset2(panel_pos, "l")
 
-        # Determine which dimension(s) can be inferred
-        can_set_width <- is.na(as.numeric(panel_width))
-        can_set_height <- is.na(as.numeric(panel_height))
-
         # try to maintain aspect ratio if there is a single facet panel
         if (row == .subset2(panel_pos, "b") &&
             col == .subset2(panel_pos, "r")) {
             respect <- is_respect(gt)
             # Continue only if 'respect' is enabled
             if (respect) {
+                # Determine which dimension(s) can be inferred
+                can_set_width <- is.na(as.numeric(panel_width))
+                can_set_height <- is.na(as.numeric(panel_height))
+
                 # Extract intrinsic panel dimensions from the gtable
                 w <- .subset2(gt, "widths")[col]
                 h <- .subset2(gt, "heights")[row]
