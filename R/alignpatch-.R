@@ -266,15 +266,6 @@ Patch <- ggproto(
         }
         self$options <- options
     },
-    setup_tag = function(self, tag) {
-        if (is_tagger(tagger <- prop(options, "tag"))) {
-            tagger$tag()
-        } else {
-            tagger
-        }
-    },
-    setup_theme = function(self, theme) theme,
-    setup_guides = function(self, guides) guides,
 
     #' @field gtable
     #'
