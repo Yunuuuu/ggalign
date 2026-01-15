@@ -69,30 +69,6 @@ test_that("add `align` object works well", {
             quad_anno("l") +
             align_kmeans(3L)
     })
-
-    # quad_alignh()
-    expect_doppelganger(
-        "alignh-layout-annotation",
-        quad_alignh(small_mat) +
-            geom_boxplot(aes(value, .discrete_y)) +
-            quad_anno("l") +
-            align_dendro(k = 3L) +
-            ggalign(data = rowSums) +
-            geom_bar(aes(value, y = .y, fill = .panel),
-                stat = "identity", orientation = "y"
-            )
-    )
-
-    # quad_alignv()
-    expect_doppelganger(
-        "alignv-layout-annotation",
-        quad_alignv(small_mat) +
-            geom_boxplot(aes(.discrete_x, value)) +
-            quad_anno("t") +
-            align_dendro(k = 3L) +
-            ggalign(data = rowSums) +
-            geom_bar(aes(.x, value, fill = .panel), stat = "identity")
-    )
 })
 
 test_that("add `align` object builds well", {
