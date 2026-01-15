@@ -49,7 +49,7 @@ and handling guide legends."><meta property="og:image" content="https://yunuuuu.
     </div>
 
     <div class="ref-description section level2">
-    <p><code>ggalign::Patch</code> represents the
+    <p><code><a href="Patch-ggproto.html">ggalign::Patch</a></code> represents the
 layout manager for a single subplot within a composite plot. The <code>Patch</code>
 object provides the interface for aligning the subplot, managing panel sizes,
 and handling guide legends.</p>
@@ -65,238 +65,26 @@ and handling guide legends.</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>Any objects has a Patch representation</p></dd>
+<dd><p>Any objects has a <a href="Patch-ggproto.html">Patch</a> representation</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A <code>ggalign::Patch</code>
+    <p>A <code><a href="Patch-ggproto.html">ggalign::Patch</a></code>
 object.</p>
     </div>
     <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>In <code><a href="alignpatches.html">alignpatches()</a></code>, each subplot is regarded as a <code>patch</code>, and <strong>a
-corresponding <code>Patch</code> object is required</strong> for proper alignment and layout
-operations. <code>Patch</code> is a <code><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto()</a></code> object that provides
-the core methods for arranging and aligning the plots.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="fields">Fields<a class="anchor" aria-label="anchor" href="#fields"></a></h2>
-
-
-<dl><dt><code>options</code></dt>
-<dd><p>A <code><a href="patch_options.html">patch_options</a></code> object used to align the plot.</p></dd>
-
-
-<dt><code>set_options</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>Sets multiple options at once in the <code>options</code> field. This method allows
-you to provide one or more key-value pairs, where each key represents an
-option name and its corresponding value is assigned to that option.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>...</code>: Key-value pairs to set specific properties of the <code>options</code>
-object. Each argument should be of the form <code>name = value</code>, where
-<code>name</code> is the option name and <code>value</code> is the value to assign to it.</p></li>
-</ul></dd>
-
-
-<dt><code>set_option</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>Sets a specific option in the <code>options</code> field. This method allows you to
-modify individual properties of the <code>options</code> object by providing a
-key-value pair.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>name</code>: The name of the option to be set (as a character string).</p></li>
-<li><p><code>value</code>: The value to assign to the specified option.</p></li>
-<li><p><code>check</code>: Logical, if <code>TRUE</code> (default), checks the validity of the
-option before assigning it. Set to <code>FALSE</code> to bypass the check.</p></li>
-</ul></dd>
-
-
-<dt><code>get_option</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>Retrieves a specific option from the <code>options</code> field.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>option</code>: The name of the option to retrieve.</p></li>
-</ul><p><strong>Value</strong>
-The value of the specified option.</p></dd>
-
-
-<dt><code>setup</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>(Optional method) Sets up the <code>options</code> and <code>data</code> for the plot.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object that contains various layout
-options.</p></li>
-</ul></dd>
-
-
-<dt><code>gtable</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>(Required method) Constructs a
-<code><a href="standardized_gtable.html">standardized gtable</a></code> object.</p>
-<p><strong>Value</strong>
-A standardized <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, or a simple
-<code><a href="https://rdrr.io/r/grid/grid-defunct.html" class="external-link">grob</a></code> object.</p>
-<p>The returned object represents the graphical structure, which can either
-be a full table-based layout (<code>gtable</code>) for more complex arrangements or
-a simpler graphical object (<code>grob</code>) when only basic plot elements are
-involved.</p></dd>
-
-
-<dt><code>decompose_guides</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>(Optional method) Collects guide legends and optionally removes the space
-they occupy.</p>
-<p>This method extracts guide legends based on the sides specified in the
-<code>guides</code> argument. After collecting the guides, the corresponding space
-in the <code>gt</code> is removed to free up space, except for guides placed
-<code>inside</code> the panel.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
-<code>self$gtable()</code>.</p></li>
-</ul><p><strong>Value</strong>
-A list with:</p><ul><li><p><code>gt</code>: The updated gtable with guide legends removed (if applicable).</p></li>
-<li><p><code>guides</code>: A named list of collected guide grobs corresponding to the
-sides specified in <code>guides</code> (or <code>NULL</code> if absent).</p></li>
-</ul></dd>
-
-
-<dt><code>tag</code></dt>
-<dd><p>Add a Tag to a <code>gtable</code></p>
-<p><strong>Description</strong>:
-This function adds a tag to a given <code>gtable</code> at a specified position. The
-tag is added only if the <code>gtable</code> is standardized (i.e., it has the
-expected number of rows and columns)..</p>
-<p><strong>Arguments</strong>:</p><ul><li><p><code>gt</code>: A <code>gtable</code> object to which the tag will be added.</p></li>
-<li><p><code>label</code>: A string representing the label or content for the tag.</p></li>
-<li><p><code>t</code>, <code>l</code>, <code>b</code>, <code>r</code>: Numeric values representing the top, left, bottom,
-and right margins (coordinates) for placing the tag on the <code>gtable</code>.</p></li>
-<li><p><code>z</code>: A numeric value representing the z-order, controlling the stacking
-order of the tag relative to other elements in the <code>gtable</code>.</p></li>
-</ul><p><strong>Value</strong>:
-The modified <code>gtable</code> with the tag added. If the <code>gtable</code> is not
-standardized (i.e., it doesn't meet the row/column requirements), the
-function returns the original <code>gtable</code> without modification.</p></dd>
-
-
-<dt><code>align_panel</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>(Optional method) In most cases, panel sizes do not need to be manually
-adjusted when aligning panels, as long as their border sizes are
-consistent. However, for gtables with a fixed aspect ratio, this method
-adjusts the panel width and height based on user input and the dimensions
-of the underlying gtable (<code>gt</code>) to ensure proper alignment.</p>
-<p>When the internal <em>numeric value</em> of either <code>panel_width</code> or
-<code>panel_height</code> is <code>NA</code> (i.e., <code>is.na(as.numeric(...))</code>), that dimension
-is inferred from the gtable while maintaining the aspect ratio for
-single-panel layouts when <code>respect = TRUE</code>.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
-<code>self$decompose_guides()</code>.</p></li>
-<li><p><code>panel_width</code>/<code>panel_height</code>: Unit objects specifying the desired panel
-size. If the internal numeric value of either is <code>NA</code>, the size is
-computed from the gtable (<code>gt</code>).</p></li>
-</ul><p><strong>Value</strong>
-A list with components:</p><ul><li><p><code>width</code>: Final panel width as a unit object</p></li>
-<li><p><code>height</code>: Final panel height as a unit object</p></li>
-<li><p><code>respect</code>: If <code>TRUE</code>, the aspect ratio was enforced</p></li>
-</ul></dd>
-
-
-<dt><code>border_sizes</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>(Optional method) retrieve the border sizes of a gtable.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
-<code>self$decompose_guides()</code>.</p></li>
-</ul><p><strong>Value</strong>
-A list with components:</p><ul><li><p><code>top</code>: <code>unit</code> values for the top borders or <code>NULL</code>.</p></li>
-<li><p><code>left</code>: <code>unit</code> values for the left borders or <code>NULL</code>.</p></li>
-<li><p><code>bottom</code>: <code>unit</code> values for the bottom borders or <code>NULL</code>.</p></li>
-<li><p><code>right</code>: <code>unit</code> values for the right borders or <code>NULL</code>.</p></li>
-</ul></dd>
-
-
-<dt><code>align_border</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>(Optional method) This method modifies the top, left, bottom, and right
-border sizes of the underlying gtable (<code>gt</code>) by replacing corresponding
-entries in its <code>heights</code> and <code>widths</code> vectors..</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
-<code>self$decompose_guides()</code>.</p></li>
-<li><p><code>t</code>, <code>l</code>, <code>b</code>, <code>r</code>: Optional numeric vectors specifying new sizes for
-the top, left, bottom, and right borders, respectively. Each vector
-replaces the corresponding entries in <code>gt$heights</code> or <code>gt$widths</code>.</p></li>
-</ul><p><strong>Value</strong>
-A modified <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object.</p></dd>
-
-
-<dt><code>place</code></dt>
-<dd><p><strong>Description</strong>
-(Optional method) Inserts the patch's gtable (including optional
-background) into the target canvas gtable.</p>
-<p>This method places the patch's gtable into a specified location of
-another gtable, preserving the background and plot layers separately if a
-background exists. The <code>t</code>, <code>l</code>, <code>b</code>, <code>r</code> arguments specify the position
-in the target gtable, and <code>bg_z</code> / <code>plot_z</code> define the stacking order
-(z-order) for background and plot.</p>
-<p><strong>Arguments</strong></p><ul><li><p><code>gtable</code>: the target canvas gtable into which the patch will be
-inserted.</p></li>
-<li><p><code>gt</code>: A <code><a href="https://gtable.r-lib.org/reference/gtable.html" class="external-link">gtable</a></code> object, usually returned by
-<code>self$align_border()</code>.</p></li>
-<li><p><code>t</code>, <code>l</code>, <code>b</code>, <code>r</code>: Integer positions (top, left, bottom, right)
-specifying where to insert the patch in the target gtable.</p></li>
-<li><p><code>i</code>: Index of the current patch, used to generate unique grob names.</p></li>
-<li><p><code>bg_z</code>: Z-order for the background grob (default <code>1L</code>).</p></li>
-<li><p><code>plot_z</code>: Z-order for the plot grob (default <code>2L</code>).</p></li>
-<li><p><code>options</code>: A <code><a href="patch_options.html">patch_options</a></code> object containing various layout
-options. Typically, this is the value returned by the subplot's
-<code>self$setup()</code> method.</p></li>
-</ul><p><strong>Details</strong></p><ul><li><p>If the patch includes a grob named <code>"background"</code>, it is separated from
-the main plot and inserted independently from the plot grob.</p></li>
-<li><p>If no background is present, the entire gtable is inserted as the plot
-grob.</p></li>
-</ul><p><strong>Value</strong>
-The modified target canvas gtable with the patch's gtable added.</p></dd>
-
-
-<dt><code>decompose_bg</code></dt>
-<dd><p><strong>Description</strong>
-Separates the background grob (if present) from the main gtable.</p>
-<p><strong>Value</strong>
-A list with:</p><ul><li><p><code>bg</code>: The background grob (or <code>NULL</code> if absent)</p></li>
-<li><p><code>gt</code>: The gtable with background removed</p></li>
-</ul></dd>
-
-
-<dt><code>place_bg</code></dt>
-<dd><p><strong>Description</strong>
-Adds the background grob into the target gtable.</p></dd>
-
-
-<dt><code>place_gt</code></dt>
-<dd><p><strong>Description</strong>
-Adds the main plot gtable into the target gtable.</p></dd>
-
-
-<dt><code>is_alignpatches</code></dt>
-<dd><p><strong>Description</strong></p>
-<p>Checks whether the object inherits from the <code><a href="alignpatches.html">alignpatches()</a></code> <code>Patch</code>
-representation.</p>
-<p>If <code>TRUE</code>, the <code>self$data</code> will include <code>patches</code>, <code>gt_list</code>,
-and <code>borders_list</code>. For an example of how these are used, refer to the
-<code>patch.ggalign_free_lab</code> function in the <code>alignpatch-free-lab.R</code> script.</p>
-<p><strong>Value</strong>
-Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code>self</code> is a
-<code>PatchAlignpatches</code> object.</p></dd>
-
-
-</dl></div>
-    <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="alignpatches.html">alignpatches()</a></code>/<code><a href="alignpatches.html">align_plots()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="Patch-ggproto.html">Patch</a></code></p></div>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">patch</span><span class="op">(</span><span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ggproto object: Class PatchGgplot, ggalign::Patch, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     adjust_panel_height: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     adjust_panel_width: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     align_border: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     align_panel: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     border_sizes: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     decompose_guides: function</span>
@@ -304,10 +92,12 @@ Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code
 <span class="r-out co"><span class="r-pr">#&gt;</span>     gtable: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     is_alignpatches: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     options: NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     panel_sizes: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     place_gt: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     plot: ggplot2::ggplot, ggplot, ggplot2::gg, S7_object, gg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     respect_panel: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     set_option: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     set_options: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setup: function</span>
@@ -324,7 +114,7 @@ Logical value (<code>TRUE</code> or <code>FALSE</code>) indicating whether <code
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
