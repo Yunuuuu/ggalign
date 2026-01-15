@@ -104,11 +104,11 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 heatmap()                 148.72ms 151.98ms     6.52         NA    8.16 
-#> 2 gplots::heatmap.2()          2.32s    2.32s     0.431        NA    0.862
+#> 1 heatmap()                 149.27ms 152.93ms     6.50         NA    8.13 
+#> 2 gplots::heatmap.2()          2.36s    2.36s     0.424        NA    0.847
 #> 3 ComplexHeatmap::Heatmap()    4.59s    4.59s     0.218        NA    1.96 
-#> 4 pheatmap::pheatmap()      546.55ms 546.55ms     1.83         NA    0    
-#> 5 ggalign()                    2.03s    2.03s     0.492        NA    7.39
+#> 4 pheatmap::pheatmap()      554.66ms 554.66ms     1.80         NA    0    
+#> 5 ggalign()                    2.05s    2.05s     0.488        NA    7.32
 ```
 
 For heatmap with dendrogram
@@ -157,9 +157,9 @@ bench::mark(
 #> # A tibble: 5 × 6
 #>   expression                     min   median `itr/sec` mem_alloc `gc/sec`
 #>   <bch:expr>                <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
-#> 1 heatmap()                    2.62s    2.62s     0.382        NA    1.53 
-#> 2 gplots::heatmap.2()          2.76s    2.76s     0.362        NA    1.09 
-#> 3 ComplexHeatmap::Heatmap()    5.57s    5.57s     0.180        NA    2.51 
-#> 4 pheatmap::pheatmap()         2.19s    2.19s     0.456        NA    0.912
-#> 5 ggalign()                    5.17s    5.17s     0.194        NA    4.06
+#> 1 heatmap()                    2.65s    2.65s     0.377        NA    1.51 
+#> 2 gplots::heatmap.2()          2.82s    2.82s     0.355        NA    1.06 
+#> 3 ComplexHeatmap::Heatmap()    5.56s    5.56s     0.180        NA    2.52 
+#> 4 pheatmap::pheatmap()         2.22s    2.22s     0.451        NA    0.902
+#> 5 ggalign()                    5.27s    5.27s     0.190        NA    3.98
 ```
